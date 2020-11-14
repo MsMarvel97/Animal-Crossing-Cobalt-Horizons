@@ -22,5 +22,12 @@ protected:
 
 	int puzzleWall1 = 0;
 	int puzzleWall2 = 0;
+	int puzzleStart2 = 0;
+	int bridge = 0;
+	bool triggered2 = false;
+	float ball = 0;
+	PhysicsBody puzzleStart2Body;
+	float puzzleStart2X = 0.f;
+	float puzzleStart2Y = 0.f;
 
 };

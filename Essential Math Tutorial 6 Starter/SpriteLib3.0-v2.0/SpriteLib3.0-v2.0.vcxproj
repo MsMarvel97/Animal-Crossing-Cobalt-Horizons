@@ -172,6 +172,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderingSystem.h" />
+    <ClInclude Include="ResizeTrigger.h" />
+    <ClInclude Include="RotationTrigger.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="Selectable.h" />
@@ -183,6 +185,7 @@
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="TranslateTrigger.h" />
     <ClInclude Include="Trigger.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Utilities.h" />
@@ -229,6 +232,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
+    <ClCompile Include="ResizeTrigger.cpp" />
+    <ClCompile Include="RotationTrigger.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Selectable.cpp" />
     <ClCompile Include="SelectiveColorEffect.cpp" />
@@ -239,6 +244,7 @@
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TranslateTrigger.cpp" />
     <ClCompile Include="Trigger.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Utilities.cpp" />

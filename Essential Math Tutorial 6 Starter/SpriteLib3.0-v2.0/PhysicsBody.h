@@ -33,6 +33,12 @@ enum EntityCategories
 class PhysicsBody
 {
 public:
+
+	//sets the width of the physics body
+	void ShearHorizontal(float w, int direction);
+	//sets the height of the physics body
+	float SetHeight(int h) const;
+
 	PhysicsBody() { };
 	//Constructs a circle collider
 	PhysicsBody(int entity, b2Body* body, float radius, vec2 centerOffset, bool sensor, EntityCategories category, int collidesWith, float friction=1.f, float density=1.f);
@@ -95,10 +101,8 @@ public:
 	//If other body types were ever implemented we could set it here 
 	//(obviously different types wouldn't use the whole BL, BR, TL, TR
 	void SetBodyType(BodyType type);
-
-
 	//Set position (just sets the variable, doesn't actually set the position)
-	void SetPosition(b2Vec2 bodyPos);
+	void SetPosition(b2Vec2 bodyPos, bool contactStep = false);
 	//Sets the velocity of the phyiscs body
 	void SetVelocity(vec3 velo);
 	//Sets the gravity scale of the physics body
@@ -110,6 +114,12 @@ public:
 	//Set the mass of the physics body
 	void SetMass(float mass);
 
+	//resizes the body along the x axis
+
+	//resizes the body along the y axis
+	
+	void MoveBody(b2Vec2 movement);
+
 	//Set the scaled width
 	void ScaleBody(float scale, int fixture);
 	//Sets the center offset for the body
@@ -119,6 +129,7 @@ public:
 
 	//Set the rotation angle
 	void SetRotationAngleDeg(float degrees);
+	void TriggeredRotation(float degrees, bool contactStep);
 	//Set whether the body has a fixed rotation
 	void SetFixedRotation(bool fixed);
 
@@ -135,6 +146,13 @@ private:
 	//Body type
 	BodyType m_bodyType = BodyType::BOX;
 
+	//Stagger the movement
+	bool moveLater = false;
+	b2Vec2 moveValue = b2Vec2(0.f, 0.f);
+
+	//Stagger the rotation
+	bool rotateLater = false;
+	float rotateValue = 0;
 
 	//Box2D position
 	b2Vec2 m_position = b2Vec2(0.f, 0.f);

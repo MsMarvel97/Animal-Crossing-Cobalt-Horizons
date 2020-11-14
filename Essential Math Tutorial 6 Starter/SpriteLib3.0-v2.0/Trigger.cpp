@@ -2,6 +2,7 @@
 
 #include "ECS.h"
 
+//depreciated
 void Trigger::OnTrigger()
 {
 	//make the object linked transparent
@@ -27,6 +28,48 @@ void Trigger::SetTriggerEntity(int triggerEnt)
 int Trigger::GetTriggerEntity()
 {
 	return m_triggerEntity;
+}
+
+
+
+void Trigger::AddTargetMoveX(float x)
+{
+	m_targetX.push_back(x);
+}
+
+void Trigger::AddTargetMoveY(float y)
+{
+	m_targetY.push_back(y);
+}
+
+void Trigger::SetScalar(float x)
+{
+	scalar = x;
+}
+
+void Trigger::SetFixtures(int y)
+{
+	fixtures = y;
+}
+
+void Trigger::SetSpriteScale(std::string sprite)
+{
+	spriteScale = sprite;
+}
+
+void Trigger::SetVectorMove(b2Vec2 move)
+{
+	movement = move;
+}
+
+void Trigger::TriggeredBodies(PhysicsBody body)
+{
+	m_bodies.push_back(body);
+}
+
+void Trigger::SetRotationAngle(float r)
+{
+	rotation = r;
 }
 
 void Trigger::AddTargetEntity(int entity)

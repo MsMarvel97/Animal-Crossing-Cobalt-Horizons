@@ -3,6 +3,7 @@
 bool PhysicsBody::m_drawBodies = false;
 std::vector<int> PhysicsBody::m_bodiesToDelete;
 
+
 PhysicsBody::PhysicsBody(int entity, b2Body * body, float radius, vec2 centerOffset, bool sensor, EntityCategories category, int collidesWith, float friction, float density)
 {
 	//Bodies don't reference a shape by themselves
@@ -136,6 +137,20 @@ void PhysicsBody::DeleteBody()
 
 void PhysicsBody::Update(Transform * trans)
 {
+	//Make sure that movement doesn't happen in contact step
+	if (moveLater)
+	{
+		//set position with saved move value
+		SetPosition(moveValue);
+		moveLater = false;
+	}
+
+	if (rotateLater)
+	{
+		SetRotationAngleDeg(rotateValue);
+		rotateLater = false;
+	}
+
 	//Stores the position;
 	m_position = m_body->GetPosition();
 
@@ -210,6 +225,8 @@ float PhysicsBody::GetWidth() const
 	return m_width;
 }
 
+
+
 float PhysicsBody::GetHeight() const
 {
 	//return body height
@@ -251,11 +268,53 @@ void PhysicsBody::SetBodyType(BodyType type)
 	m_bodyType = type;
 }
 
+//void PhysicsBody::ShearHorizontal(float w, int direction)
+//{
+//
+//	float vertexMatrix[2][2];
+//			//Used to calculate new width and height
+//			float lX = 999.f;
+//			float rX = -999.f;
+//			float bY = 999.f;
+//			float tY = -999.f;
+//
+//			//Gets the shape value and casts as b2PolygonShape so we can access the vertices
+//			b2PolygonShape* bodyShape = (b2PolygonShape*)m_body->GetFixtureList()[3].GetShape();
+//
+//			//Center of the polygon
+//			b2Vec2 center = bodyShape->m_centroid;
+//
+//				//Create normalized direction
+//				b2Vec2 vert = bodyShape->m_vertices[3];
+//				lX = std::min(lX, vert.x);
+//				rX = std::max(rX, vert.x);
+//				bY = std::min(bY, vert.y);
+//				tY = std::max(tY, vert.y);
+//
+//
+//				//Moves the vert out by a scaled direction vector
+//				bodyShape->m_vertices[0] = lX;
+//				bodyShape->m_vertices[1] += w * direction;
+//
+//			m_width = rX - lX;
+//			m_height = tY - bY;
+//			m_body->SetAwake(true);
+//}
 
-void PhysicsBody::SetPosition(b2Vec2 bodyPos)
+
+
+void PhysicsBody::SetPosition(b2Vec2 bodyPos, bool contactStep)
 {
-	//Body transform
-	m_body->SetTransform(bodyPos, m_body->GetAngle());
+	if (!contactStep)
+	{
+		//Body transform
+		m_body->SetTransform(bodyPos, m_body->GetAngle());
+	}
+	else
+	{
+		moveLater = true;
+		moveValue = bodyPos;
+	}
 }
 
 void PhysicsBody::SetVelocity(vec3 velo)
@@ -290,7 +349,13 @@ void PhysicsBody::SetCenterOffset(vec2 cent)
 	m_centerOffset = cent;
 }
 
-
+//deprecated
+void PhysicsBody::MoveBody(b2Vec2 movement)
+{
+	float x = movement.x;
+	float y = movement.y;
+	m_position.Set(x, y);
+}
 
 void PhysicsBody::ScaleBody(float scale, int fixture)
 {
@@ -345,6 +410,20 @@ void PhysicsBody::SetRotationAngleDeg(float degrees)
 {
 	//Set the rotation angle
 	m_body->SetTransform(m_body->GetPosition(), Transform::ToRadians(degrees));
+}
+
+void PhysicsBody::TriggeredRotation(float degrees, bool contactStep)
+{
+	if (!contactStep)
+	{
+		//Set the rotation angle
+		m_body->SetTransform(m_body->GetPosition(), Transform::ToRadians(degrees));
+	}
+	else
+	{
+		rotateLater = true;
+		rotateValue = degrees;
+	}
 }
 
 void PhysicsBody::SetFixedRotation(bool fixed)

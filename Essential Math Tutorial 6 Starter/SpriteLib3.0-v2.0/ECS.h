@@ -11,6 +11,9 @@
 #include "VerticalScroll.h"
 #include "MainEntities.h"
 #include "DestroyTrigger.h"
+#include "TranslateTrigger.h"
+#include "ResizeTrigger.h"
+#include "RotationTrigger.h"
 #include "HorizontalScroll.h"
 #include "CanJump.h"
 
