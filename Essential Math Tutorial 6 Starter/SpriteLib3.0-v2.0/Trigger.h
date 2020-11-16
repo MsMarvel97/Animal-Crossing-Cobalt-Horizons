@@ -29,6 +29,8 @@ public:
 	void AddTargetEntity(int entity);
 	void SetTargetEntities(std::vector<int> entities);
 
+	void SetCheck(bool checking);
+	bool GetCheck();
 	std::vector<int> GetTargetEntities();
 	b2Vec2 movement = (b2Vec2(0.f, 0.f));
 
@@ -43,5 +45,6 @@ protected:
 	std::vector<PhysicsBody> m_bodies;
 	std::vector<int> m_targetX;
 	std::vector<int> m_targetY;
+	bool check = false;
 };
 

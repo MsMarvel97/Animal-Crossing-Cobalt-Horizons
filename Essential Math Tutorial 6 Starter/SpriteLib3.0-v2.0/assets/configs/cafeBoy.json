@@ -1,0 +1,8 @@
+{"IdleDown":{"Frame0":[1.0,460.0,328.0,1.0],"NumFrames":1,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"IdleLeft":{"Frame0":[1317.0,460.0,1644.0,1.0],"NumFrames":1,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"IdleRight":{"Frame0":[2633.0,460.0,2960.0,1.0],"NumFrames":1,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"IdleUp":{"Frame0":[3949.0,460.0,4276.0,1.0],"NumFrames":1,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"WalkDown":{"Frame0":[1.0,460.0,328.0,1.0],"Frame1":[330.0,460.0,657.0,1.0],"Frame2":[659.0,460.0,986.0,1.0],"Frame3":[988.0,460.0,1315.0,1.0],"NumFrames":4,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"WalkLeft":{"Frame0":[1317.0,460.0,1644.0,1.0],"Frame1":[1646.0,460.0,1973.0,1.0],"Frame2":[1975.0,460.0,2302.0,1.0],"Frame3":[2304.0,460.0,2631.0,1.0],"NumFrames":4,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"WalkRight":{"Frame0":[2633.0,460.0,2960.0,1.0],"Frame1":[2962.0,460.0,3289.0,1.0],"Frame2":[3291.0,460.0,3618.0,1.0],"Frame3":[3620.0,460.0,3947.0,1.0],"NumFrames":4,"Repeating":true,"SecsPerFrame":0.07999999821186066},
+"WalkUp":{"Frame0":[3949.0,460.0,4276.0,1.0],"Frame1":[4278.0,460.0,4605.0,1.0],"Frame2":[4607.0,460.0,4934.0,1.0],"Frame3":[4936.0,460.0,5263.0,1.0],"NumFrames":4,"Repeating":true,"SecsPerFrame":0.07999999821186066}}

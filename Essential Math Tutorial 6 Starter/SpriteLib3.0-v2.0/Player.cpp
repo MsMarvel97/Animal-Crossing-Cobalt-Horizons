@@ -60,18 +60,18 @@ void Player::InitPlayer(std::string& fileName, std::string& animationJSON, int w
 	m_animController->AddAnimation(animations["WalkDown"].get<Animation>());
 #endif
 
-	//Attack Animations\\
-
-	//AttackLeft
-	m_animController->AddAnimation(animations["AttackLeft"].get<Animation>());
-	//AttackRight
-	m_animController->AddAnimation(animations["AttackRight"].get<Animation>());
-#ifdef TOPDOWN
-	//AttackUp
-	m_animController->AddAnimation(animations["AttackUp"].get<Animation>());
-	//AttackDown
-	m_animController->AddAnimation(animations["AttackDown"].get<Animation>());
-#endif
+//	//Attack Animations\\
+//
+//	//AttackLeft
+//	m_animController->AddAnimation(animations["AttackLeft"].get<Animation>());
+//	//AttackRight
+//	m_animController->AddAnimation(animations["AttackRight"].get<Animation>());
+//#ifdef TOPDOWN
+//	//AttackUp
+//	m_animController->AddAnimation(animations["AttackUp"].get<Animation>());
+//	//AttackDown
+//	m_animController->AddAnimation(animations["AttackDown"].get<Animation>());
+//#endif
 
 	//Set Default Animation
 	m_animController->SetActiveAnim(IDLELEFT);
@@ -167,7 +167,7 @@ void Player::MovementUpdate()
 		}
 	}
 
-	if (Input::GetKeyDown(Key::Space))
+	/*if (Input::GetKeyDown(Key::Space))
 	{
 		m_moving = false;
 
@@ -178,7 +178,7 @@ void Player::MovementUpdate()
 
 		m_attacking = true;
 		m_locked = true;
-	}
+	}*/
 }
 
 void Player::AnimationUpdate()
@@ -190,22 +190,22 @@ void Player::AnimationUpdate()
 		//Puts it into the WALK category
 		activeAnimation = WALK;
 	}
-	else if (m_attacking)
-	{
-		activeAnimation = ATTACK;
+	//else if (m_attacking)
+	//{
+	//	activeAnimation = ATTACK;
 
-		//Check if the attack animation is done
-		if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
-		{
-			//Will auto set to idle
-			m_locked = false;
-			m_attacking = false;
-			//Resets the attack animation
-			m_animController->GetAnimation(m_animController->GetActiveAnim()).Reset();
+	//	//Check if the attack animation is done
+	//	if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
+	//	{
+	//		//Will auto set to idle
+	//		m_locked = false;
+	//		m_attacking = false;
+	//		//Resets the attack animation
+	//		m_animController->GetAnimation(m_animController->GetActiveAnim()).Reset();
 
-			activeAnimation = IDLE;
-		}
-	}
+	//		activeAnimation = IDLE;
+	//	}
+	//}
 	else
 	{
 		activeAnimation = IDLE;

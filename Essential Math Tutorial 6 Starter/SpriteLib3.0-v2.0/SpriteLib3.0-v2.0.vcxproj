@@ -137,10 +137,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationController.h" />
+    <ClInclude Include="AnimationDemo.h" />
     <ClInclude Include="AnimationSpritePlayground.h" />
     <ClInclude Include="AnimationSystem.h" />
     <ClInclude Include="BackEnd.h" />
     <ClInclude Include="BloomEffect.h" />
+    <ClInclude Include="Cafe.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="CanJump.h" />
@@ -170,6 +172,8 @@
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="PixelateEffect.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerCheck.h" />
+    <ClInclude Include="PosCheck.h" />
     <ClInclude Include="PostEffect.h" />
     <ClInclude Include="RenderingSystem.h" />
     <ClInclude Include="ResizeTrigger.h" />
@@ -180,6 +184,7 @@
     <ClInclude Include="SelectiveColorEffect.h" />
     <ClInclude Include="SepiaEffect.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SmallTrigger.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
@@ -198,10 +203,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationController.cpp" />
+    <ClCompile Include="AnimationDemo.cpp" />
     <ClCompile Include="AnimationSpritePlayground.cpp" />
     <ClCompile Include="AnimationSystem.cpp" />
     <ClCompile Include="BackEnd.cpp" />
     <ClCompile Include="BloomEffect.cpp" />
+    <ClCompile Include="Cafe.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="CanJump.cpp" />
@@ -230,6 +237,8 @@
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PixelateEffect.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerCheck.cpp" />
+    <ClCompile Include="PosCheck.cpp" />
     <ClCompile Include="PostEffect.cpp" />
     <ClCompile Include="RenderingSystem.cpp" />
     <ClCompile Include="ResizeTrigger.cpp" />
@@ -239,6 +248,7 @@
     <ClCompile Include="SelectiveColorEffect.cpp" />
     <ClCompile Include="SepiaEffect.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SmallTrigger.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />

@@ -82,6 +82,18 @@ void Trigger::SetTargetEntities(std::vector<int> entities)
 	m_targetEntities = entities;
 }
 
+void Trigger::SetCheck(bool checking)
+{
+	check = checking;
+}
+
+bool Trigger::GetCheck()
+{
+	return check;
+}
+
+
+
 std::vector<int> Trigger::GetTargetEntities()
 {
 	return m_targetEntities;

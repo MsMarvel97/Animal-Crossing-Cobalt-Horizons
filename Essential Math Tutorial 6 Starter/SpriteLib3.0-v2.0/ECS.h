@@ -16,6 +16,9 @@
 #include "RotationTrigger.h"
 #include "HorizontalScroll.h"
 #include "CanJump.h"
+#include "SmallTrigger.h"
+#include "PosCheck.h"
+
 
 
 class ECS abstract
