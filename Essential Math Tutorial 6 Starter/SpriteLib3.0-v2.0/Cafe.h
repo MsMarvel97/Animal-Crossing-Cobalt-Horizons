@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Scene.h"
 #include "PhysicsPlaygroundListener.h"
 
@@ -21,6 +20,7 @@ public:
 
 protected:
 	PhysicsPlaygroundListener listener;
+	int player = 0;
 	int test;
 	int check = 0;
 };

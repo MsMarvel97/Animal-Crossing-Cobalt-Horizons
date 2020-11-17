@@ -210,6 +210,9 @@
     <ClInclude Include="PlayerCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Checker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\imgui\imgui.cpp">
@@ -396,6 +399,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Checker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

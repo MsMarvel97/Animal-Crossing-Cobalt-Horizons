@@ -10,14 +10,14 @@ void PosCheck::OnTrigger()
 void PosCheck::OnEnter()
 {
 	Trigger::OnEnter();
-	SetCheck(true);
+	ECS::GetComponent<Checker>(m_targetEntities[0]).SetCollisionTracker(true);
 	
 }
 
 void PosCheck::OnExit()
 {
 	Trigger::OnExit();
-	SetCheck(false);
+	ECS::GetComponent<Checker>(m_targetEntities[0]).SetCollisionTracker(false);
 }
 
 

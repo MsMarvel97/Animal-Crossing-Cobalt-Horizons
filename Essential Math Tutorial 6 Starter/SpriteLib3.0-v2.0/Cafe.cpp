@@ -51,6 +51,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 	//main player entity
 	{
 		auto entity = ECS::CreateEntity();
+		player = entity;
 		ECS::SetIsMainPlayer(entity, true);
 
 		ECS::AttachComponent<Player>(entity);
@@ -58,6 +59,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Transform>(entity);
 		ECS::AttachComponent<AnimationController>(entity);
 		ECS::AttachComponent<PhysicsBody>(entity);
+		ECS::AttachComponent<Checker>(entity);
 		ECS::AttachComponent<CanJump>(entity);
 
 		//Set up components
@@ -235,6 +237,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, 0.f, 80.f));
 		ECS::GetComponent<Trigger*>(entity) = new PosCheck();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
@@ -256,6 +259,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 }
+
 //update
 void Cafe::Update()
 {
@@ -265,9 +269,12 @@ void Cafe::Update()
 }
 
 
+
+
 void Cafe::KeyboardHold()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
+
 
 	float speed = 1.f;
 	vec3 vel = vec3(0.f, 0.f, 0.f);
@@ -297,6 +304,9 @@ void Cafe::KeyboardHold()
 		//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, -400.f * speed), true);
 		vel = vel + vec3(0.f, -5.f, 0.f);
 	}
+
+
+
 	player.SetVelocity(vel * speed);
 
 	//Change physics body size for circle
@@ -314,7 +324,7 @@ void Cafe::KeyboardDown()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
-
+	auto& tracker = ECS::GetComponent<Checker>(MainEntities::MainPlayer());
 	
 
 	if (Input::GetKeyDown(Key::T))
@@ -330,6 +340,14 @@ void Cafe::KeyboardDown()
 		}
 	}
 	
+	if (tracker.GetCollisionTracker() == true)
+	{
+		if (Input::GetKey(Key::Y))
+		{
+			std::cout << "Hello from Y" << std::endl;
+		}
+	}
+
 }
 
 void Cafe::KeyboardUp()
