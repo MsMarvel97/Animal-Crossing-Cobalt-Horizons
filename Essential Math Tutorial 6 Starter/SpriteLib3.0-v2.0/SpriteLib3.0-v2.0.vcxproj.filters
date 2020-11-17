@@ -213,6 +213,9 @@
     <ClInclude Include="Checker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FruitGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\imgui\imgui.cpp">
@@ -402,6 +405,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Checker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FruitGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

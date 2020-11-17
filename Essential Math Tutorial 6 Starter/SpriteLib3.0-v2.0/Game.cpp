@@ -40,10 +40,10 @@ void Game::InitGame()
 	m_scenes.push_back(new AnimationSpritePlayground("Animation TIEM!!!!"));
 	m_scenes.push_back(new Cafe("Cafe Mini-game!!!"));
 	m_scenes.push_back(new AnimationDemo("Animation Demo"));
-
+	m_scenes.push_back(new FruitGame("Catch the Fruits!!!"));
 	 
 	//Sets active scene reference to our scene
-	m_activeScene = m_scenes[3];
+	m_activeScene = m_scenes[5];
 
 	m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
 
