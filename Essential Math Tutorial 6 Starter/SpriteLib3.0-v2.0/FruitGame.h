@@ -18,6 +18,10 @@ public:
 
 protected:
 	PhysicsPlaygroundListener listener;
-
+	int ball = 0;
+	int floor;
+	float timer;
+	float limit = 2.f;
+	bool countDown = true;
 
 };
