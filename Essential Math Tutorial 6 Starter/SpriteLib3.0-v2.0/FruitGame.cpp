@@ -204,44 +204,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		
 	}
 
-	while(Timer::deltaTime) {
-		{
-			float randomYVal = ((float)rand()) / ((float)RAND_MAX / (200.f - 20.f));
-			
-			//fruit
-			float randomXVal = ((float)rand()) / ((float)RAND_MAX / (130.f - 20.f));
-			auto entity = ECS::CreateEntity();
-			ball = entity;
-			ECS::AttachComponent<Sprite>(entity);
-			ECS::AttachComponent<Transform>(entity);
-			ECS::AttachComponent<PhysicsBody>(entity);
 
-
-			std::string fileName = "BeachBall.png";
-			ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 10, 10);
-			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
-			ECS::GetComponent<Transform>(entity).SetPosition(vec3(45.f, 20.f, 3.f));
-
-			auto& tempSpr = ECS::GetComponent<Sprite>(entity);
-			auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
-
-			float shrinkX = 0.f;
-			float shrinkY = 0.f;
-
-			b2Body* tempBody;
-			b2BodyDef tempDef;
-
-			tempDef.type = b2_dynamicBody;
-			tempDef.position.Set(float32(randomXVal), float32(40.f));
-
-			tempBody = m_physicsWorld->CreateBody(&tempDef);
-
-			tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), false, OBJECTS, GROUND | ENVIRONMENT | PLAYER | TRIGGER, 0.3f);
-			tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
-			tempPhsBody.SetGravityScale(0.03f);
-		}
-
-	}
 	//Setup MainCamera Entity
 	{
 
@@ -271,7 +234,9 @@ void FruitGame::Update()
 {
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
 	Scene::AdjustScrollOffset();
+	NewFruits();
 	player.Update();
+	
 }
 
 void FruitGame::KeyboardHold()
@@ -280,16 +245,17 @@ void FruitGame::KeyboardHold()
 	float speed = 1.f;
 	b2Vec2 vel = b2Vec2(0.f, 0.f);
 
-	if (Input::GetKey(Key::Shift))
+	if (Input::GetKey(Key::Shift) && start == true)
 	{
 		speed *= 1.3f;
 	}
 
-	if (Input::GetKey(Key::A))//left
+	if (Input::GetKey(Key::A) && start==true)//left
 	{
+		
 		player.GetBody()->ApplyForceToCenter(b2Vec2(-35000.f * speed, 0.f), true);
 	}
-	if (Input::GetKey(Key::D))//right
+	if (Input::GetKey(Key::D) && start == true)//right
 	{
 		player.GetBody()->ApplyForceToCenter(b2Vec2(35000.f * speed, 0.f), true);
 	}
@@ -312,7 +278,12 @@ void FruitGame::KeyboardDown()
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
-	
+	if (Input::GetKeyDown(Key::P) && start == false) {
+		start = true;
+		timer = Timer::time;
+		Timer::StopWatch(timer);
+		std::cout << timer<<std::endl;
+	}
 		
 }
 
@@ -321,3 +292,45 @@ void FruitGame::KeyboardUp()
 
 
 }
+
+void FruitGame::NewFruits()
+{
+	while (timer != 0 && timer < 90.f) {
+		{
+			auto entity = ECS::CreateEntity();
+			float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
+			
+		
+			//Add components
+			ECS::AttachComponent<Sprite>(entity);
+			ECS::AttachComponent<Transform>(entity);
+			ECS::AttachComponent<PhysicsBody>(entity);
+
+			//Sets up the components
+			std::string fileName = "BeachBall.png";
+			ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 10, 10);
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+			ECS::GetComponent<Transform>(entity).SetPosition(vec3(45.f, -8.f, 3.f));
+
+			auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+			auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+			float shrinkX = 0.f;
+			float shrinkY = 0.f;
+
+			b2Body* tempBody;
+			b2BodyDef tempDef;
+			tempDef.type = b2_dynamicBody;
+			tempDef.position.Set(float32(randomXVal), float32(70.f));
+
+			tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+			//tempPhsBody = PhysicsBody(tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false);
+			tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), false, OBJECTS, GROUND | ENVIRONMENT | PLAYER | TRIGGER, 0.3f);
+
+			tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
+		}
+	}
+}
+
+

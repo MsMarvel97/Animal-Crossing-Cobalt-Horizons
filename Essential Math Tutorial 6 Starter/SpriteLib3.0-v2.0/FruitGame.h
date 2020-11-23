@@ -15,13 +15,16 @@ public:
 	void KeyboardHold() override;
 	void KeyboardDown() override;
 	void KeyboardUp() override;
+	void NewFruits();
 
 protected:
 	PhysicsPlaygroundListener listener;
 	int ball = 0;
 	int floor;
-	float timer;
+	float timer=0.f;
 	float limit = 2.f;
 	bool countDown = true;
+	bool start = false;
+
 
 };
