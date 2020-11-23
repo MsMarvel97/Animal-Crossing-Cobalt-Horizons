@@ -1,6 +1,6 @@
 #include "FruitGame.h"
 #include "Utilities.h"
-
+#include <iostream>
 #include <random>
 
 FruitGame::FruitGame(std::string name)
@@ -253,11 +253,11 @@ void FruitGame::KeyboardHold()
 	if (Input::GetKey(Key::A) && start==true)//left
 	{
 		
-		player.GetBody()->ApplyForceToCenter(b2Vec2(-35000.f * speed, 0.f), true);
+		player.GetBody()->ApplyForceToCenter(b2Vec2(-350000.f * speed, 0.f), true);
 	}
 	if (Input::GetKey(Key::D) && start == true)//right
 	{
-		player.GetBody()->ApplyForceToCenter(b2Vec2(35000.f * speed, 0.f), true);
+		player.GetBody()->ApplyForceToCenter(b2Vec2(350000.f * speed, 0.f), true);
 	}
 	
 	if (Input::GetKey(Key::O)){
@@ -280,9 +280,11 @@ void FruitGame::KeyboardDown()
 	}
 	if (Input::GetKeyDown(Key::P) && start == false) {
 		start = true;
-		timer = Timer::time;
-		Timer::StopWatch(timer);
-		std::cout << timer<<std::endl;
+		if (timer == 0)
+		{
+			timer = Timer::time;
+		}
+		std::cout << Timer::StopWatch(timer) <<std::endl;
 	}
 		
 }
@@ -295,20 +297,23 @@ void FruitGame::KeyboardUp()
 
 void FruitGame::NewFruits()
 {
-	while (timer != 0 && timer < 90.f) {
+	float currentTime = Timer::StopWatch(timer);
+	if (timer != 0 && currentTime < 90.f) 
+	{
+		if (frames == 0)
 		{
 			auto entity = ECS::CreateEntity();
-			float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
-			
-		
+			//float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
+			float randomXVal = rand()% 220-115;
+
 			//Add components
 			ECS::AttachComponent<Sprite>(entity);
 			ECS::AttachComponent<Transform>(entity);
 			ECS::AttachComponent<PhysicsBody>(entity);
 
 			//Sets up the components
-			std::string fileName = "BeachBall.png";
-			ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 10, 10);
+			std::string fileName = "Peach.png";
+			ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
 			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 			ECS::GetComponent<Transform>(entity).SetPosition(vec3(45.f, -8.f, 3.f));
 
@@ -325,10 +330,19 @@ void FruitGame::NewFruits()
 
 			tempBody = m_physicsWorld->CreateBody(&tempDef);
 
-			//tempPhsBody = PhysicsBody(tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false);
-			tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), false, OBJECTS, GROUND | ENVIRONMENT | PLAYER | TRIGGER, 0.3f);
+			tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), false, OBJECTS, PLAYER, 0.3f);
 
 			tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
+			std::cout << Timer::StopWatch(timer) << std::endl;
+			frames++;
+		}
+		else if (frames >= 1 && frames < 60)
+		{
+			frames++;
+		}
+		else if (frames == 60)
+		{
+			frames = 0;
 		}
 	}
 }

@@ -25,6 +25,6 @@ protected:
 	float limit = 2.f;
 	bool countDown = true;
 	bool start = false;
-
+	int frames = 0;
 
 };
