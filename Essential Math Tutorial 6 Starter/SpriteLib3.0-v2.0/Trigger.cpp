@@ -98,3 +98,8 @@ std::vector<int> Trigger::GetTargetEntities()
 {
 	return m_targetEntities;
 }
+
+void Trigger::SetFlag(int setTrue)
+{
+	flag = setTrue;
+}

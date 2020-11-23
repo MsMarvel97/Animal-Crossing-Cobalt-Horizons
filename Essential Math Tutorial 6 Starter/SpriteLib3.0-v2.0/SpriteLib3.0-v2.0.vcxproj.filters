@@ -210,10 +210,10 @@
     <ClInclude Include="PlayerCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Checker.h">
+    <ClInclude Include="CollisionFlagClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FruitGame.h">
+    <ClInclude Include="CupChangeTrigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -404,10 +404,10 @@
     <ClCompile Include="PlayerCheck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Checker.cpp">
+    <ClCompile Include="CollisionFlagClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FruitGame.cpp">
+    <ClCompile Include="CupChangeTrigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

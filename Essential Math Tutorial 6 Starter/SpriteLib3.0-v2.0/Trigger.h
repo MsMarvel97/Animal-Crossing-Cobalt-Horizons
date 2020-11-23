@@ -34,6 +34,8 @@ public:
 	std::vector<int> GetTargetEntities();
 	b2Vec2 movement = (b2Vec2(0.f, 0.f));
 
+	void SetFlag(int setTrue);
+
 
 protected:
 	int m_triggerEntity;
@@ -46,5 +48,6 @@ protected:
 	std::vector<int> m_targetX;
 	std::vector<int> m_targetY;
 	bool check = false;
+	int flag = 0;
 };
 

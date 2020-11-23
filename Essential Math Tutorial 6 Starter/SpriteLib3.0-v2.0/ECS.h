@@ -14,11 +14,12 @@
 #include "TranslateTrigger.h"
 #include "ResizeTrigger.h"
 #include "RotationTrigger.h"
-#include "Checker.h"
 #include "HorizontalScroll.h"
 #include "CanJump.h"
 #include "SmallTrigger.h"
 #include "PosCheck.h"
+#include "CollisionFlagClass.h"
+#include "CupChangeTrigger.h"
 
 
 
