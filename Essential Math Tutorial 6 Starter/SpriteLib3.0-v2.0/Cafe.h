@@ -51,6 +51,11 @@ public:
 	std::string sugarNames[4] = { "none.png", "onespoon.png", "twospoons.png", "threespoons.png" };
 	std::string cupNames[3] = { "small.png", "medium.png", "large.png" };
 
+	double timePassed = 0;
+
+	bool gameOver = false;
+	int timesUpSign;
+
 protected:
 	PhysicsPlaygroundListener listener;
 	int toggleLayout;

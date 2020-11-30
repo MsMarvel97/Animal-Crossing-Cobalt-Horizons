@@ -29,7 +29,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 	//Sets up aspect ratio for the camera
 	float aspectRatio = windowWidth / windowHeight;
-
+	std::cout << "Hello \n";
 	//Setup MainCamera Entity
 	{
 		/*Scene::CreateCamera(m_sceneReg, vec4(-75.f, 75.f, -75.f, 75.f), -100.f, 100.f, windowWidth, windowHeight, true, true);*/
@@ -764,15 +764,51 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-90.f, -20.f, 10.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 	}
+
+	//Time's Up Sign
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		timesUpSign = entity;
+		//set up components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "timesUp.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 150, 50);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 20.f, 10.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
 	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 }
+
 //update
 void Cafe::Update()
 {
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
 	//Scene::AdjustScrollOffset();
 	player.Update();
+	timePassed += Timer::deltaTime;
+	
+	if (timePassed <= 10)
+	{
+		std::cout << timePassed << " ";
+	}
+	if (timePassed > 10)
+	{
+		gameOver = true;
+	}
+	if (gameOver == true)
+	{
+		ECS::GetComponent<Sprite>(timesUpSign).SetTransparency(1.f);
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+		ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer()).SetBody(tempBody);
+	}
+	
 }
 
 
@@ -782,34 +818,35 @@ void Cafe::KeyboardHold()
 
 	float speed = 1.f;
 	vec3 vel = vec3(0.f, 0.f, 0.f);
+	if (gameOver == false)
+	{
+		if (Input::GetKey(Key::Shift))
+		{
+			speed *= 10.f;
+		}
 
-	if (Input::GetKey(Key::Shift))
-	{
-		speed *= 10.f;
+		if (Input::GetKey(Key::A))//left
+		{
+			//player.GetBody()->ApplyForceToCenter(b2Vec2(-400.f * speed, 0.f), true);
+			vel = vel + vec3(-5.f, 0.f, 0.f);
+		}
+		if (Input::GetKey(Key::D))//right
+		{
+			//player.GetBody()->ApplyForceToCenter(b2Vec2(400.f * speed, 0.f), true);
+			vel = vel + vec3(5.f, 0.f, 0.f);
+		}
+		if (Input::GetKey(Key::W))//up
+		{
+			//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, 400.f * speed), true);
+			vel = vel + vec3(0.f, 5.f, 0.f);
+		}
+		if (Input::GetKey(Key::S))//down
+		{
+			//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, -400.f * speed), true);
+			vel = vel + vec3(0.f, -5.f, 0.f);
+		}
+		player.SetVelocity(vel * speed);
 	}
-
-	if (Input::GetKey(Key::A))//left
-	{
-		//player.GetBody()->ApplyForceToCenter(b2Vec2(-400.f * speed, 0.f), true);
-		vel = vel + vec3(-5.f, 0.f, 0.f);
-	}
-	if (Input::GetKey(Key::D))//right
-	{
-		//player.GetBody()->ApplyForceToCenter(b2Vec2(400.f * speed, 0.f), true);
-		vel = vel + vec3(5.f, 0.f, 0.f);
-	}
-	if (Input::GetKey(Key::W))//up
-	{
-		//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, 400.f * speed), true);
-		vel = vel + vec3(0.f, 5.f, 0.f);
-	}
-	if (Input::GetKey(Key::S))//down
-	{
-		//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, -400.f * speed), true);
-		vel = vel + vec3(0.f, -5.f, 0.f);
-	}
-	player.SetVelocity(vel * speed);
-
 	//Change physics body size for circle
 	if (Input::GetKey(Key::O))
 	{
@@ -850,15 +887,6 @@ void Cafe::KeyboardDown()
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
-	if (canJump.m_canJump)
-	{
-		if (Input::GetKeyDown(Key::Space))
-		{
-			player.GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.f, 160.f), true);
-			canJump.m_canJump = false;
-		}
-	}
-
 	if (Input::GetKey(Key::One))
 	{
 		ECS::GetComponent<Sprite>(toggleLayout).SetTransparency(0.f);
@@ -867,116 +895,118 @@ void Cafe::KeyboardDown()
 	{
 		ECS::GetComponent<Sprite>(toggleLayout).SetTransparency(0.5f);
 	}
-	if (Input::GetKeyDown(Key::B) && stuff.GetCollisionBlend() == true)
+	if (gameOver == false)
 	{
+		if (Input::GetKeyDown(Key::B) && stuff.GetCollisionBlend() == true)
 		{
-			if (bBlend == true)
 			{
-				ECS::GetComponent<Sprite>(blueMountainBlend).SetTransparency(0.f);
-				ECS::GetComponent<Sprite>(kilimonjaroBlend).SetTransparency(1.f);
-				ECS::GetComponent<Sprite>(mochaBlend).SetTransparency(0.f);
+				if (bBlend == true)
+				{
+					ECS::GetComponent<Sprite>(blueMountainBlend).SetTransparency(0.f);
+					ECS::GetComponent<Sprite>(kilimonjaroBlend).SetTransparency(1.f);
+					ECS::GetComponent<Sprite>(mochaBlend).SetTransparency(0.f);
 
-				bBlend = false;
-				kBlend = true;
-				mBlend = false;
-				beverage[0] = 2;
+					bBlend = false;
+					kBlend = true;
+					mBlend = false;
+					beverage[0] = 2;
+				}
+				else if (kBlend == true)
+				{
+					ECS::GetComponent<Sprite>(blueMountainBlend).SetTransparency(0.f);
+					ECS::GetComponent<Sprite>(kilimonjaroBlend).SetTransparency(0.f);
+					ECS::GetComponent<Sprite>(mochaBlend).SetTransparency(1.f);
+
+					bBlend = false;
+					kBlend = false;
+					mBlend = true;
+					beverage[0] = 3;
+				}
+				else if (mBlend == true)
+				{
+					ECS::GetComponent<Sprite>(blueMountainBlend).SetTransparency(1.f);
+					ECS::GetComponent<Sprite>(kilimonjaroBlend).SetTransparency(0.f);
+					ECS::GetComponent<Sprite>(mochaBlend).SetTransparency(0.f);
+
+					bBlend = true;
+					kBlend = false;
+					mBlend = false;
+					beverage[0] = 1;
+				}
 			}
-			else if (kBlend == true)
+			for (int i = 0; i < 4; i++)
 			{
-				ECS::GetComponent<Sprite>(blueMountainBlend).SetTransparency(0.f);
-				ECS::GetComponent<Sprite>(kilimonjaroBlend).SetTransparency(0.f);
-				ECS::GetComponent<Sprite>(mochaBlend).SetTransparency(1.f);
-
-				bBlend = false;
-				kBlend = false;
-				mBlend = true;
-				beverage[0] = 3;
+				std::cout << beverage[i] << " ";
 			}
-			else if (mBlend == true)
+			std::cout << "\n";
+		}
+		if (Input::GetKeyDown(Key::M) && stuff.GetCollisionMilk() == true)
+		{
+			if (milk1 == true)
 			{
-				ECS::GetComponent<Sprite>(blueMountainBlend).SetTransparency(1.f);
-				ECS::GetComponent<Sprite>(kilimonjaroBlend).SetTransparency(0.f);
-				ECS::GetComponent<Sprite>(mochaBlend).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_none).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(1.f);
+				ECS::GetComponent<Sprite>(m_regular).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_lots).SetTransparency(0.f);
 
-				bBlend = true;
-				kBlend = false;
-				mBlend = false;
-				beverage[0] = 1;
+				milk1 = false;
+				milk2 = true;
+				milk3 = false;
+				milk4 = false;
+				beverage[1] = 2;
+
 			}
-		}
-		for (int i = 0; i < 4; i++)
-		{
-			std::cout << beverage[i] << " ";
-		}
-		std::cout << "\n";
-	}	
-	if (Input::GetKeyDown(Key::M) && stuff.GetCollisionMilk() == true)
-	{
-		if (milk1 == true)
-		{
-			ECS::GetComponent<Sprite>(m_none).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(1.f);
-			ECS::GetComponent<Sprite>(m_regular).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_lots).SetTransparency(0.f);
+			else if (milk2 == true)
+			{
+				ECS::GetComponent<Sprite>(m_none).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_regular).SetTransparency(1.f);
+				ECS::GetComponent<Sprite>(m_lots).SetTransparency(0.f);
 
-			milk1 = false;
-			milk2 = true;
-			milk3 = false;
-			milk4 = false;
-			beverage[1] = 2;
-			
-		}
-		else if (milk2 == true)
-		{
-			ECS::GetComponent<Sprite>(m_none).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_regular).SetTransparency(1.f);
-			ECS::GetComponent<Sprite>(m_lots).SetTransparency(0.f);
+				milk1 = false;
+				milk2 = false;
+				milk3 = true;
+				milk4 = false;
+				beverage[1] = 3;
 
-			milk1 = false;
-			milk2 = false;
-			milk3 = true;
-			milk4 = false;
-			beverage[1] = 3;
-			
-		}
-		else if (milk3 == true)
-		{
-			ECS::GetComponent<Sprite>(m_none).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_regular).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_lots).SetTransparency(1.f);
+			}
+			else if (milk3 == true)
+			{
+				ECS::GetComponent<Sprite>(m_none).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_regular).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_lots).SetTransparency(1.f);
 
-			milk1 = false;
-			milk2 = false;
-			milk3 = false;
-			milk4 = true;
-			beverage[1] = 4;
-			
-		}
-		else if (milk4 == true)
-		{
-			ECS::GetComponent<Sprite>(m_none).SetTransparency(1.f);
-			ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_regular).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(m_lots).SetTransparency(0.f);
+				milk1 = false;
+				milk2 = false;
+				milk3 = false;
+				milk4 = true;
+				beverage[1] = 4;
 
-			milk1 = true;
-			milk2 = false;
-			milk3 = false;
-			milk4 = false;
-			beverage[1] = 1;			
+			}
+			else if (milk4 == true)
+			{
+				ECS::GetComponent<Sprite>(m_none).SetTransparency(1.f);
+				ECS::GetComponent<Sprite>(m_aLittleBit).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_regular).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(m_lots).SetTransparency(0.f);
+
+				milk1 = true;
+				milk2 = false;
+				milk3 = false;
+				milk4 = false;
+				beverage[1] = 1;
+			}
+			for (int i = 0; i < 4; i++)
+			{
+				std::cout << beverage[i] << " ";
+			}
+			std::cout << "\n";
 		}
-		for (int i = 0; i < 4; i++)
+		if (Input::GetKeyDown(Key::C) && stuff.GetCollisionSugar() == true)
 		{
-			std::cout << beverage[i] << " ";
-		}
-		std::cout << "\n";
-	}
-	if (Input::GetKeyDown(Key::C) && stuff.GetCollisionSugar() == true)
-	{
-		if (b_noneSpoon == true)
-		{
+			if (b_noneSpoon == true)
+			{
 				ECS::GetComponent<Sprite>(noneSpoon).SetTransparency(0.f);
 				ECS::GetComponent<Sprite>(oneSpoon).SetTransparency(1.f);
 				ECS::GetComponent<Sprite>(twoSpoon).SetTransparency(0.f);
@@ -987,9 +1017,9 @@ void Cafe::KeyboardDown()
 				b_twoSpoon = false;
 				b_threeSpoon = false;
 				beverage[2] = 2;
-		}
-		else if (b_oneSpoon == true)
-		{
+			}
+			else if (b_oneSpoon == true)
+			{
 				ECS::GetComponent<Sprite>(noneSpoon).SetTransparency(0.f);
 				ECS::GetComponent<Sprite>(oneSpoon).SetTransparency(0.f);
 				ECS::GetComponent<Sprite>(twoSpoon).SetTransparency(1.f);
@@ -1000,9 +1030,9 @@ void Cafe::KeyboardDown()
 				b_twoSpoon = true;
 				b_threeSpoon = false;
 				beverage[2] = 3;
-		}
-		else if (b_twoSpoon == true)
-		{
+			}
+			else if (b_twoSpoon == true)
+			{
 				ECS::GetComponent<Sprite>(noneSpoon).SetTransparency(0.f);
 				ECS::GetComponent<Sprite>(oneSpoon).SetTransparency(0.f);
 				ECS::GetComponent<Sprite>(twoSpoon).SetTransparency(0.f);
@@ -1013,9 +1043,9 @@ void Cafe::KeyboardDown()
 				b_twoSpoon = false;
 				b_threeSpoon = true;
 				beverage[2] = 4;
-		}
-		else if (b_threeSpoon == true)
-		{
+			}
+			else if (b_threeSpoon == true)
+			{
 				ECS::GetComponent<Sprite>(noneSpoon).SetTransparency(1.f);
 				ECS::GetComponent<Sprite>(oneSpoon).SetTransparency(0.f);
 				ECS::GetComponent<Sprite>(twoSpoon).SetTransparency(0.f);
@@ -1026,106 +1056,107 @@ void Cafe::KeyboardDown()
 				b_twoSpoon = false;
 				b_threeSpoon = false;
 				beverage[2] = 1;
-		}
-		for (int i = 0; i < 4; i++)
-		{
-			std::cout << beverage[i] << " ";
-		}
-		std::cout << "\n";
-	}
-	if (Input::GetKeyDown(Key::Enter) && stuff.GetCollisionCups() == true)
-	{
-		if (sC == true)
-		{
-			ECS::GetComponent<Sprite>(smallCup).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(mediumCup).SetTransparency(1.f);
-			ECS::GetComponent<Sprite>(largeCup).SetTransparency(0.f);
-			sC = false;
-			mC = true;
-			lC = false;
-			beverage[3] = 2;
-		}
-		else if (mC == true)
-		{
-			ECS::GetComponent<Sprite>(smallCup).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(mediumCup).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(largeCup).SetTransparency(1.f);
-			sC = false;
-			mC = false;
-			lC = true;
-			beverage[3] = 3;
-		}
-		else if (lC == true)
-		{
-			ECS::GetComponent<Sprite>(smallCup).SetTransparency(1.f);
-			ECS::GetComponent<Sprite>(mediumCup).SetTransparency(0.f);
-			ECS::GetComponent<Sprite>(largeCup).SetTransparency(0.f);
-			sC = true;
-			mC = false;
-			lC = false;
-			beverage[3] = 1;
-		}
-		for (int i = 0; i < 4; i++)
-		{
-			std::cout << beverage[i] << " ";
-		}
-		std::cout << "\n";
-	}
-	if (Input::GetKeyDown(Key::G) && stuff.GetCollisionRegister() == true)
-	{
-		std::string tempName;
-		bool correctOrder = true;
-		for (int i = 0; i < 4; i++)
-		{
-			if (beverage[i] != custOrder[i])
-			{
-				correctOrder = false;
 			}
-		}
-		if (correctOrder == true)
-		{
-			std::cout << "The order is correct\n";
-			
-			//creates new order
-			int orderIndex = 0;
-			srand(time(0) + rand());
-
-			custOrder[0] = rand() % 4;
-			custOrder[1] = rand() % 5;
-			custOrder[2] = rand() % 5;
-			custOrder[3] = rand() % 4;
-
-			while (custOrder[0] == 0)
+			for (int i = 0; i < 4; i++)
 			{
-				custOrder[0] = rand() % 4;
+				std::cout << beverage[i] << " ";
 			}
-			while (custOrder[1] == 0)
-			{
-				custOrder[1] = rand() % 4;
-			}
-			while (custOrder[2] == 0)
-			{
-				custOrder[2] = rand() % 4;
-			}
-			while (custOrder[3] == 0)
-			{
-				custOrder[3] = rand() % 4;
-			}
-			tempName = blendNames[custOrder[0] - 1];
-			ECS::GetComponent<Sprite>(blendOrder).LoadSprite(tempName, 30, 15);
-			tempName = milkNames[custOrder[1] - 1];
-			ECS::GetComponent<Sprite>(milkOrder).LoadSprite(tempName, 30, 15);
-			tempName = sugarNames[custOrder[2] - 1];
-			ECS::GetComponent<Sprite>(sugarOrder).LoadSprite(tempName, 30, 15);
-			tempName = cupNames[custOrder[3] - 1];
-			ECS::GetComponent<Sprite>(cupOrder).LoadSprite(tempName, 30, 15);
-
-			std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
 			std::cout << "\n";
 		}
-		else
+		if (Input::GetKeyDown(Key::Enter) && stuff.GetCollisionCups() == true)
 		{
-			std::cout << "The order is wrong\n";
+			if (sC == true)
+			{
+				ECS::GetComponent<Sprite>(smallCup).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(mediumCup).SetTransparency(1.f);
+				ECS::GetComponent<Sprite>(largeCup).SetTransparency(0.f);
+				sC = false;
+				mC = true;
+				lC = false;
+				beverage[3] = 2;
+			}
+			else if (mC == true)
+			{
+				ECS::GetComponent<Sprite>(smallCup).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(mediumCup).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(largeCup).SetTransparency(1.f);
+				sC = false;
+				mC = false;
+				lC = true;
+				beverage[3] = 3;
+			}
+			else if (lC == true)
+			{
+				ECS::GetComponent<Sprite>(smallCup).SetTransparency(1.f);
+				ECS::GetComponent<Sprite>(mediumCup).SetTransparency(0.f);
+				ECS::GetComponent<Sprite>(largeCup).SetTransparency(0.f);
+				sC = true;
+				mC = false;
+				lC = false;
+				beverage[3] = 1;
+			}
+			for (int i = 0; i < 4; i++)
+			{
+				std::cout << beverage[i] << " ";
+			}
+			std::cout << "\n";
+		}
+		if (Input::GetKeyDown(Key::G) && stuff.GetCollisionRegister() == true)
+		{
+			std::string tempName;
+			bool correctOrder = true;
+			for (int i = 0; i < 4; i++)
+			{
+				if (beverage[i] != custOrder[i])
+				{
+					correctOrder = false;
+				}
+			}
+			if (correctOrder == true)
+			{
+				std::cout << "The order is correct\n";
+
+				//creates new order
+				int orderIndex = 0;
+				srand(time(0) + rand());
+
+				custOrder[0] = rand() % 4;
+				custOrder[1] = rand() % 5;
+				custOrder[2] = rand() % 5;
+				custOrder[3] = rand() % 4;
+
+				while (custOrder[0] == 0)
+				{
+					custOrder[0] = rand() % 4;
+				}
+				while (custOrder[1] == 0)
+				{
+					custOrder[1] = rand() % 4;
+				}
+				while (custOrder[2] == 0)
+				{
+					custOrder[2] = rand() % 4;
+				}
+				while (custOrder[3] == 0)
+				{
+					custOrder[3] = rand() % 4;
+				}
+				tempName = blendNames[custOrder[0] - 1];
+				ECS::GetComponent<Sprite>(blendOrder).LoadSprite(tempName, 30, 15);
+				tempName = milkNames[custOrder[1] - 1];
+				ECS::GetComponent<Sprite>(milkOrder).LoadSprite(tempName, 30, 15);
+				tempName = sugarNames[custOrder[2] - 1];
+				ECS::GetComponent<Sprite>(sugarOrder).LoadSprite(tempName, 30, 15);
+				tempName = cupNames[custOrder[3] - 1];
+				ECS::GetComponent<Sprite>(cupOrder).LoadSprite(tempName, 30, 15);
+
+				std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
+				std::cout << "\n";
+			}
+			else
+			{
+				std::cout << "The order is wrong\n";
+			}
 		}
 	}
 	//manual new order override

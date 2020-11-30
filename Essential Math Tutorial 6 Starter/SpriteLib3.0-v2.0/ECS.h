@@ -20,7 +20,7 @@
 #include "PosCheck.h"
 #include "CollisionFlagClass.h"
 #include "CupChangeTrigger.h"
-
+#include "TestTrigger.h"
 
 
 class ECS abstract
