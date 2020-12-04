@@ -194,7 +194,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 1000, 15);
 		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, 2.f));
-
+		
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
 
@@ -315,7 +315,7 @@ void FruitGame::KeyboardDown()
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
-	if (Input::GetKeyDown(Key::P) && start == false) {
+	if (Input::GetKeyDown(Key::Enter) && start == false) {
 		start = true;
 		if (timer == 0)
 		{
