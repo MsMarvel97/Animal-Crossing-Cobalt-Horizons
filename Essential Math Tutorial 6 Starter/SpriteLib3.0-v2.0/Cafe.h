@@ -56,6 +56,9 @@ public:
 	bool gameOver = false;
 	int timesUpSign;
 
+	int ordersComplete = 0;//tracks how many orders the user has successfully completed
+	bool repeat = true;
+
 protected:
 	PhysicsPlaygroundListener listener;
 	int toggleLayout;

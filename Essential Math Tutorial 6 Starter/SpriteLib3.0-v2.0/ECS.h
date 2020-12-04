@@ -21,6 +21,8 @@
 #include "CollisionFlagClass.h"
 #include "CupChangeTrigger.h"
 #include "TestTrigger.h"
+#include "DialogueTrigger.h"
+#include "DialogueClass.h"
 
 
 class ECS abstract

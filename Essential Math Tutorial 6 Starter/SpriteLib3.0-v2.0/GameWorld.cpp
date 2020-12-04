@@ -52,6 +52,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 	//main player entity
 	{
 		auto entity = ECS::CreateEntity();
+		player = entity;
 
 		ECS::SetIsMainPlayer(entity, true);
 
@@ -62,6 +63,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 		ECS::AttachComponent<CanJump>(entity);
 		ECS::AttachComponent<CollisionFlagClass>(entity);
+		ECS::AttachComponent<DialogueClass>(entity);
 
 		//Set up components
 		std::string fileName = "spritesheets/overworldSpritesheet.png";
@@ -126,7 +128,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(170.f), float32(-120.f));
+		tempDef.position.Set(float32(170.f), float32(-130.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -662,6 +664,117 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetPosition(b2Vec2(40, -65));
 	}
 
+	//Setup Book One
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		bookOne = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "book.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(5);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(400, 340));
+	}
+
+	//Setup Book Two
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		bookTwo = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "book.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(6);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(300.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(380, 30));
+	}
+
+	//Setup Book Three
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		bookThree = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "book.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(7);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(-30, 250));
+	}
+
 	//Setup Cafe Trigger
 	{
 		//Creates entity
@@ -712,8 +825,12 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		std::string fileName = "filler.jpg";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 30, 30);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 2.f));
-		ECS::GetComponent<Trigger*>(entity) = new TestTrigger();
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(2);
+
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
@@ -734,8 +851,43 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 
 	//Setup Stevie Trigger
 	{
-		
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "filler.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 30, 30);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 2.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(3);
+
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(340, -40));
 	}
+
 	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 }
@@ -792,8 +944,54 @@ void GameWorld::KeyboardHold()
 }
 void GameWorld::KeyboardDown()
 {
+	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
+	auto& talk = ECS::GetComponent<DialogueClass>(MainEntities::MainPlayer());
 	if (Input::GetKeyDown(Key::T))
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetMithunan() == true)
+	{
+		std::cout << "It works.\n";
+	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetStevie() == true)
+	{
+		if (booksFound == 3)
+		{
+			std::cout << "Yay! Thanks for finding all my library books!";
+		}
+		else
+		{
+			std::cout << "Can you find my three missing library books?.\n";
+		}
+		
+	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetBookOne() == true && bookOneTriggered == false)
+	{
+		std::cout << "Book collected.\n";
+		booksFound += 1;
+		std::cout << "Books found: " << booksFound << ".\n";
+		ECS::GetComponent<Sprite>(bookOne).SetTransparency(0.f);
+		bookOneTriggered = true;
+	}
+	else if (Input::GetKeyDown(Key::E) && talk.GetBookTwo() == true && bookTwoTriggered == false)
+	{
+		std::cout << "Book collected.\n";
+		booksFound += 1;
+		std::cout << "Books found: " << booksFound << ".\n";
+		ECS::GetComponent<Sprite>(bookTwo).SetTransparency(0.f);
+		bookTwoTriggered = true;
+	}
+	else if (Input::GetKeyDown(Key::E) && talk.GetBookThree() == true && bookThreeTriggered == false)
+	{
+		std::cout << "Book collected.\n";
+		booksFound += 1;
+		std::cout << "Books found: " << booksFound << ".\n";
+		ECS::GetComponent<Sprite>(bookThree).SetTransparency(0.f);
+		bookThreeTriggered = true;
+	}
+	
 }

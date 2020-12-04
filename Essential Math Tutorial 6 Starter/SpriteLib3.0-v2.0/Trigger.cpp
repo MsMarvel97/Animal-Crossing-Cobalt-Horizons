@@ -103,3 +103,8 @@ void Trigger::SetFlag(int setTrue)
 {
 	flag = setTrue;
 }
+
+void Trigger::SetDiaNum(int setTrue)//used for dialogue trigger
+{
+	diaNum = setTrue;
+}

@@ -790,12 +790,13 @@ void Cafe::Update()
 	//Scene::AdjustScrollOffset();
 	player.Update();
 	timePassed += Timer::deltaTime;
+	int timeLimit = 30;
 	
-	if (timePassed <= 10)
+	if (timePassed <= timeLimit)
 	{
-		std::cout << timePassed << " ";
+		//std::cout << timePassed << " ";
 	}
-	if (timePassed > 10)
+	if (timePassed > timeLimit)
 	{
 		gameOver = true;
 	}
@@ -806,10 +807,11 @@ void Cafe::Update()
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
-		ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer()).SetBody(tempBody);
+		ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer()).SetBody(tempBody);//sets the player's body to a static body
 	}
 	
 }
+
 
 
 void Cafe::KeyboardHold()
@@ -828,33 +830,24 @@ void Cafe::KeyboardHold()
 		if (Input::GetKey(Key::A))//left
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(-400.f * speed, 0.f), true);
-			vel = vel + vec3(-5.f, 0.f, 0.f);
+			vel = vel + vec3(-7.f, 0.f, 0.f);
 		}
 		if (Input::GetKey(Key::D))//right
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(400.f * speed, 0.f), true);
-			vel = vel + vec3(5.f, 0.f, 0.f);
+			vel = vel + vec3(7.f, 0.f, 0.f);
 		}
 		if (Input::GetKey(Key::W))//up
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, 400.f * speed), true);
-			vel = vel + vec3(0.f, 5.f, 0.f);
+			vel = vel + vec3(0.f, 7.f, 0.f);
 		}
 		if (Input::GetKey(Key::S))//down
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, -400.f * speed), true);
-			vel = vel + vec3(0.f, -5.f, 0.f);
+			vel = vel + vec3(0.f, -7.f, 0.f);
 		}
 		player.SetVelocity(vel * speed);
-	}
-	//Change physics body size for circle
-	if (Input::GetKey(Key::O))
-	{
-		player.ScaleBody(1.3 * Timer::deltaTime, 0);
-	}
-	else if (Input::GetKey(Key::I))
-	{
-		player.ScaleBody(-1.3 * Timer::deltaTime, 0);
 	}
 }
 
@@ -1152,12 +1145,19 @@ void Cafe::KeyboardDown()
 
 				std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
 				std::cout << "\n";
+
+				ordersComplete += 1;//increases the number of orders the player has successfully completed by 1.
 			}
 			else
 			{
 				std::cout << "The order is wrong\n";
 			}
 		}
+	}
+	if (gameOver == true && repeat == true)
+	{
+		std::cout << "You have completed: " << ordersComplete << " orders!\n";
+		repeat = false;
 	}
 	//manual new order override
 	if (Input::GetKeyDown(Key::Y))

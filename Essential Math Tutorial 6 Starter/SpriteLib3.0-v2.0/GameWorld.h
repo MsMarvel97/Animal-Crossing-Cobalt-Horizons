@@ -19,7 +19,16 @@ public:
 	float treeX = -180.f;
 	float treeY = -50.f;
 
+	int booksFound = 0;
+	bool bookOneTriggered = false;
+	bool bookTwoTriggered = false;
+	bool bookThreeTriggered = false;
+
 protected:
 	PhysicsPlaygroundListener listener;
+	int player;
+	int bookOne;
+	int bookTwo;
+	int bookThree;
 };
 

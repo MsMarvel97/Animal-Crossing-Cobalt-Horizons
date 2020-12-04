@@ -149,6 +149,8 @@
     <ClInclude Include="CollisionFlagClass.h" />
     <ClInclude Include="CupChangeTrigger.h" />
     <ClInclude Include="DestroyTrigger.h" />
+    <ClInclude Include="DialogueClass.h" />
+    <ClInclude Include="DialogueTrigger.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="FirstCreation.h" />
@@ -219,6 +221,8 @@
     <ClCompile Include="CollisionFlagClass.cpp" />
     <ClCompile Include="CupChangeTrigger.cpp" />
     <ClCompile Include="DestroyTrigger.cpp" />
+    <ClCompile Include="DialogueClass.cpp" />
+    <ClCompile Include="DialogueTrigger.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="FirstCreation.cpp" />

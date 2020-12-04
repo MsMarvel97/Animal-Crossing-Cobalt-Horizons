@@ -36,6 +36,8 @@ public:
 
 	void SetFlag(int setTrue);
 
+	void SetDiaNum(int setTrue);//used for dialogue trigger
+
 
 protected:
 	int m_triggerEntity;
@@ -49,5 +51,6 @@ protected:
 	std::vector<int> m_targetY;
 	bool check = false;
 	int flag = 0;
+	int diaNum = 0;//used for dialogue trigger
 };
 
