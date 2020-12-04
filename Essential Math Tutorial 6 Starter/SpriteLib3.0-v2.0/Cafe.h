@@ -16,7 +16,7 @@ public:
 	void KeyboardHold() override;
 	void KeyboardDown() override;
 	//void KeyboardUp() override;
-
+	void CurrentTime();
 	bool done = false;
 
 	//booleans for cups
@@ -51,13 +51,18 @@ public:
 	std::string sugarNames[4] = { "none.png", "onespoon.png", "twospoons.png", "threespoons.png" };
 	std::string cupNames[3] = { "small.png", "medium.png", "large.png" };
 
-	double timePassed = 0;
+	
 
 	bool gameOver = false;
 	int timesUpSign;
 
 	int ordersComplete = 0;//tracks how many orders the user has successfully completed
 	bool repeat = true;
+
+	float timer = 0;
+	float currentTime = 0;
+	bool start = false;
+	
 
 protected:
 	PhysicsPlaygroundListener listener;

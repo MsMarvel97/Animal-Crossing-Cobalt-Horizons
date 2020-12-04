@@ -16,6 +16,7 @@ Cafe::Cafe(std::string name)
 //register stuff
 void Cafe::InitScene(float windowWidth, float windowHeight)
 {
+	
 	//Dynamically allocates the register
 	m_sceneReg = new entt::registry;
 
@@ -24,7 +25,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 	//Sets up aspect ratio for the camera
 	float aspectRatio = windowWidth / windowHeight;
-	std::cout << "Hello \n";
+	//std::cout << "Hello \n";
 	//Setup MainCamera Entity
 	{
 		/*Scene::CreateCamera(m_sceneReg, vec4(-75.f, 75.f, -75.f, 75.f), -100.f, 100.f, windowWidth, windowHeight, true, true);*/
@@ -35,17 +36,18 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		//Creates new orthographic camera
 		ECS::AttachComponent<Camera>(entity);
-		ECS::AttachComponent<HorizontalScroll>(entity);
-		ECS::AttachComponent<VerticalScroll>(entity);
+		/*ECS::AttachComponent<HorizontalScroll>(entity);
+		ECS::AttachComponent<VerticalScroll>(entity);*/
 
-		vec4 temp = vec4(-75.f, 75.f, -75.f, 75.f);
+		//vec4 temp = vec4(-75.f, 75.f, -75.f, 75.f);//original
+		vec4 temp = vec4(-70.f, 70.f, -70.f, 100.f);//alternate
 		ECS::GetComponent<Camera>(entity).SetOrthoSize(temp);
 		ECS::GetComponent<Camera>(entity).SetWindowSize(vec2(float(windowWidth), float(windowHeight)));
 		ECS::GetComponent<Camera>(entity).Orthographic(aspectRatio, temp.x, temp.y, temp.z, temp.w, -100.f, 100.f);
 
 		//Attaches the camera to vert and horiz scrolls
-		ECS::GetComponent<HorizontalScroll>(entity).SetCam(&ECS::GetComponent<Camera>(entity));
-		ECS::GetComponent<VerticalScroll>(entity).SetCam(&ECS::GetComponent<Camera>(entity));
+		/*ECS::GetComponent<HorizontalScroll>(entity).SetCam(&ECS::GetComponent<Camera>(entity));
+		ECS::GetComponent<VerticalScroll>(entity).SetCam(&ECS::GetComponent<Camera>(entity));*/
 	}
 
 	//main player entity
@@ -103,7 +105,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		std::string fileName = "layout.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 626/3, 576/3);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 0.f, 20.f));
-		ECS::GetComponent<Sprite>(entity).SetTransparency(0.5f);
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 	}
 
 	//cafe floor
@@ -774,24 +776,21 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 20.f, 10.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 	}
-	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
-	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
+	
+	/*ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
+	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));*/
 }
 
 //update
 void Cafe::Update()
 {
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
+
+	
 	//Scene::AdjustScrollOffset();
 	player.Update();
-	timePassed += Timer::deltaTime;
-	int timeLimit = 90;
-	
-	if (timePassed <= timeLimit)
-	{
-		//std::cout << timePassed << " ";
-	}
-	if (timePassed > timeLimit)
+	//std::cout << currentTime << "\n";
+	if (currentTime > 10.f)
 	{
 		gameOver = true;
 	}
@@ -804,7 +803,10 @@ void Cafe::Update()
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 		ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer()).SetBody(tempBody);//sets the player's body to a static body
 	}
-	
+	if (start == true)
+	{
+		CurrentTime();
+	}
 }
 
 
@@ -815,7 +817,7 @@ void Cafe::KeyboardHold()
 
 	float speed = 1.f;
 	vec3 vel = vec3(0.f, 0.f, 0.f);
-	if (gameOver == false)
+	if (gameOver == false && start == true)
 	{
 		if (Input::GetKey(Key::Shift))
 		{
@@ -870,22 +872,26 @@ void Cafe::KeyboardDown()
 	std::string sugar3 = "twoSpoon.jpg";
 	std::string sugar4 = "threeSpoon.jpg";
 
+	if (Input::GetKeyDown(Key::X))
+	{
+		std::cout << Timer::StopWatch(timer) << "\n";
+	}
 
 	if (Input::GetKeyDown(Key::T))
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
-	if (Input::GetKey(Key::One))
+	/*if (Input::GetKey(Key::One))
 	{
 		ECS::GetComponent<Sprite>(toggleLayout).SetTransparency(0.f);
 	}
 	if (Input::GetKeyDown(Key::Two))
 	{
 		ECS::GetComponent<Sprite>(toggleLayout).SetTransparency(0.5f);
-	}
-	if (gameOver == false)
+	}*/
+	if (gameOver == false && start == true)
 	{
-		if (Input::GetKeyDown(Key::B) && stuff.GetCollisionBlend() == true)
+		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionBlend() == true)
 		{
 			{
 				if (bBlend == true)
@@ -928,7 +934,7 @@ void Cafe::KeyboardDown()
 			}
 			std::cout << "\n";
 		}
-		if (Input::GetKeyDown(Key::M) && stuff.GetCollisionMilk() == true)
+		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionMilk() == true)
 		{
 			if (milk1 == true)
 			{
@@ -991,7 +997,7 @@ void Cafe::KeyboardDown()
 			}
 			std::cout << "\n";
 		}
-		if (Input::GetKeyDown(Key::C) && stuff.GetCollisionSugar() == true)
+		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionSugar() == true)
 		{
 			if (b_noneSpoon == true)
 			{
@@ -1051,7 +1057,7 @@ void Cafe::KeyboardDown()
 			}
 			std::cout << "\n";
 		}
-		if (Input::GetKeyDown(Key::Enter) && stuff.GetCollisionCups() == true)
+		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionCups() == true)
 		{
 			if (sC == true)
 			{
@@ -1089,7 +1095,7 @@ void Cafe::KeyboardDown()
 			}
 			std::cout << "\n";
 		}
-		if (Input::GetKeyDown(Key::G) && stuff.GetCollisionRegister() == true)
+		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionRegister() == true)
 		{
 			std::string tempName;
 			bool correctOrder = true;
@@ -1154,6 +1160,14 @@ void Cafe::KeyboardDown()
 		std::cout << "You have completed: " << ordersComplete << " orders!\n";
 		repeat = false;
 	}
+	if (Input::GetKeyDown(Key::Enter) && start == false)
+	{
+		start = true;
+		if (timer == 0)
+		{
+			timer = Timer::time;
+		}
+	}
 	//manual new order override
 	if (Input::GetKeyDown(Key::Y))
 	{
@@ -1189,5 +1203,10 @@ void Cafe::KeyboardDown()
 		std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
 		std::cout << "\n";
 	}
+}
+
+void Cafe::CurrentTime()
+{
+	currentTime = Timer::StopWatch(timer);
 }
 
