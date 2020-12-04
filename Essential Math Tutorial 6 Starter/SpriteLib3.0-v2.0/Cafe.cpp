@@ -3,11 +3,6 @@
 #include "Timer.h"
 #include <random>
 
-	
-		
-	
-	
-
 //gravity
 Cafe::Cafe(std::string name)
 	: Scene(name)
@@ -790,7 +785,7 @@ void Cafe::Update()
 	//Scene::AdjustScrollOffset();
 	player.Update();
 	timePassed += Timer::deltaTime;
-	int timeLimit = 30;
+	int timeLimit = 90;
 	
 	if (timePassed <= timeLimit)
 	{

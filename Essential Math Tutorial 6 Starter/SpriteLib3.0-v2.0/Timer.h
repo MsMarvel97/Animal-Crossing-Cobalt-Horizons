@@ -17,6 +17,8 @@ public:
 	static void Reset();
 	//Updates the clock using ctime
 	static void Update();
+	//stopwatch for tracking time elapsed since a specific moment
+	static float StopWatch(float startTime);
 };
 
 #endif // !__TIMER_H__
