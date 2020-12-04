@@ -16,15 +16,19 @@ public:
 	void KeyboardDown() override;
 	void KeyboardUp() override;
 	void NewFruits();
+	void UpdateFruitKinematics();
 
 protected:
 	PhysicsPlaygroundListener listener;
 	int ball = 0;
-	int floor;
-	float timer=0.f;
+	int floor = 0;
+	float timer = 0.f;
 	float limit = 2.f;
 	bool countDown = true;
 	bool start = false;
 	int frames = 0;
-
+	int fruitCounter = 0;
+	int stunTracker = 0;
+	int player = 0;
+	int stunIcon = 0;
 };

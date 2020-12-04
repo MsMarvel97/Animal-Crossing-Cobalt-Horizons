@@ -1,4 +1,5 @@
 #include "PhysicsBody.h"
+#include "ECS.h"
 
 bool PhysicsBody::m_drawBodies = false;
 std::vector<int> PhysicsBody::m_bodiesToDelete;
@@ -153,7 +154,6 @@ void PhysicsBody::Update(Transform * trans)
 
 	//Stores the position;
 	m_position = m_body->GetPosition();
-
 	//Sets the transform position to the position of the physics body
 	trans->SetPosition(vec3(m_body->GetPosition().x, m_body->GetPosition().y, trans->GetPosition().z));
 	trans->SetRotationAngleZ(Degrees(m_body->GetAngle()));
@@ -267,40 +267,6 @@ void PhysicsBody::SetBodyType(BodyType type)
 	//Set the type of body this is
 	m_bodyType = type;
 }
-
-//void PhysicsBody::ShearHorizontal(float w, int direction)
-//{
-//
-//	float vertexMatrix[2][2];
-//			//Used to calculate new width and height
-//			float lX = 999.f;
-//			float rX = -999.f;
-//			float bY = 999.f;
-//			float tY = -999.f;
-//
-//			//Gets the shape value and casts as b2PolygonShape so we can access the vertices
-//			b2PolygonShape* bodyShape = (b2PolygonShape*)m_body->GetFixtureList()[3].GetShape();
-//
-//			//Center of the polygon
-//			b2Vec2 center = bodyShape->m_centroid;
-//
-//				//Create normalized direction
-//				b2Vec2 vert = bodyShape->m_vertices[3];
-//				lX = std::min(lX, vert.x);
-//				rX = std::max(rX, vert.x);
-//				bY = std::min(bY, vert.y);
-//				tY = std::max(tY, vert.y);
-//
-//
-//				//Moves the vert out by a scaled direction vector
-//				bodyShape->m_vertices[0] = lX;
-//				bodyShape->m_vertices[1] += w * direction;
-//
-//			m_width = rX - lX;
-//			m_height = tY - bY;
-//			m_body->SetAwake(true);
-//}
-
 
 
 void PhysicsBody::SetPosition(b2Vec2 bodyPos, bool contactStep)

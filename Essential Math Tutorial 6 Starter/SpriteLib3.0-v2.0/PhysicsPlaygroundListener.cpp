@@ -68,6 +68,60 @@ void PhysicsPlaygroundListener::EndContact(b2Contact* contact)
 	}
 }
 
+//void PhysicsPlaygroundListener::ContactTargets(b2Contact* contact)
+//{
+//	b2Fixture* fixtureA = contact->GetFixtureA();
+//	b2Fixture* fixtureB = contact->GetFixtureB();
+//
+//	bool sensorA = fixtureA->IsSensor();
+//	bool sensorB = fixtureB->IsSensor();
+//	
+//	int entityA = (int)fixtureA->GetBody()->GetUserData();
+//	int entityB = (int)fixtureB->GetBody()->GetUserData();
+//	int entity = 0;
+//
+//	//if neither or both are sensors, will be false
+//	if ((sensorA ^ sensorB))
+//	{
+//		if (sensorA)
+//		{
+//			TriggerEnter(fixtureA);
+//			entity = entityA;
+//			
+//		}
+//		else if (sensorB)
+//		{
+//			TriggerEnter(fixtureB);
+//			entity = entityB;
+//		}
+//	}
+//
+//	b2Filter filterA = fixtureA->GetFilterData();
+//	b2Filter filterB = fixtureB->GetFilterData();
+//
+//	if ((filterA.categoryBits == OBJECTS && filterB.categoryBits == TRIGGER) || (filterB.categoryBits == OBJECTS && filterA.categoryBits == TRIGGER))
+//	{
+//		if (filterA.categoryBits == OBJECTS)
+//		{
+//			ECS::GetComponent<Trigger>((int)fixtureA->GetBody()->GetUserData()).AddTargetEntity(entity);
+//		}
+//	}
+//
+//
+//
+//	if ((filterA.categoryBits == PLAYER && filterB.categoryBits == GROUND) || (filterB.categoryBits == PLAYER && filterA.categoryBits == GROUND))
+//	{
+//		if (filterA.categoryBits == PLAYER)
+//		{
+//			ECS::GetComponent<CanJump>((int)fixtureA->GetBody()->GetUserData()).m_canJump = true;
+//		}
+//		else if (filterB.categoryBits == PLAYER)
+//		{
+//			ECS::GetComponent<CanJump>((int)fixtureB->GetBody()->GetUserData()).m_canJump = true;
+//		}
+//	}
+//}
+
 void PhysicsPlaygroundListener::TriggerEnter(b2Fixture* sensor)
 {
 	int entity = (int)sensor->GetBody()->GetUserData();
@@ -81,3 +135,5 @@ void PhysicsPlaygroundListener::TriggerExit(b2Fixture* sensor)
 
 	ECS::GetComponent<Trigger*>(entity)->OnExit();
 }
+
+

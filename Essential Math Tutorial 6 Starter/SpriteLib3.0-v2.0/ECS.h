@@ -14,11 +14,17 @@
 #include "TranslateTrigger.h"
 #include "ResizeTrigger.h"
 #include "RotationTrigger.h"
+#include "RecheckConditions.h"
 #include "Checker.h"
 #include "HorizontalScroll.h"
 #include "CanJump.h"
+#include "CollisionFlag.h"
 #include "SmallTrigger.h"
 #include "PosCheck.h"
+#include "PlayerPoints.h"
+#include "PeachTrigger.h"
+#include "CoconutTrigger.h"
+#include "Kinematics.h"
 
 
 

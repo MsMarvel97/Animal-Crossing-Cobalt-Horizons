@@ -28,6 +28,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 	{
 		auto entity = ECS::CreateEntity();
 		ECS::SetIsMainPlayer(entity, true);
+		player = entity;
 
 		//Add components
 		ECS::AttachComponent<Player>(entity);
@@ -35,6 +36,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Transform>(entity);
 		ECS::AttachComponent<PhysicsBody>(entity);
 		ECS::AttachComponent<CanJump>(entity);
+		ECS::AttachComponent<PlayerPoints>(entity);
 		ECS::AttachComponent<AnimationController>(entity);
 
 		//Set up components
@@ -63,8 +65,9 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
 		tempPhsBody.SetGravityScale(1.f);
 	}
-	{
 
+
+	{
 		//Creates background middle
 		auto entity = ECS::CreateEntity();
 
@@ -78,6 +81,8 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -5.f, 0.f));
 	}
+
+
 	{
 
 		//Creates background left
@@ -93,6 +98,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-150.f, -5.f, 0.f));
 	}
+
 	{
 
 		//Creates background right
@@ -108,6 +114,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(150.f, -5.f, 0.f));
 	}
+
 	{
 		//Creates the boundary wall on the right
 		//Creates entity
@@ -139,7 +146,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 		tempPhsBody.SetRotationAngleDeg(90.f);
 	}
-	
+
 	{
 		//Creates boundary wall on the left
 		//Creates entity
@@ -171,6 +178,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 		tempPhsBody.SetRotationAngleDeg(90.f);
 	}
+
 	{
 		//Floor
 		//Creates entity
@@ -201,11 +209,31 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
-		
+
 	}
 
 
-	//Setup MainCamera Entity
+
+	//Stun Icon
+	{
+		auto entity = ECS::CreateEntity();
+		stunIcon = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Kinematics>(entity);
+
+		std::string fileName = "boxSprite.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 15, 15);
+		ECS::GetComponent<Kinematics>(entity).SetChild(entity);
+		ECS::GetComponent<Kinematics>(entity).SetParent(player);
+		ECS::GetComponent<Kinematics>(entity).SetOffset(20.f, 20.f);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f + 30, -50 + 30, 50.f));
+
+	}
+
+
+		//Setup MainCamera Entity
 	{
 
 		//Creates Camera entity
@@ -232,30 +260,39 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 void FruitGame::Update()
 {
+	auto& stun = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
+	auto& stunKin = ECS::GetComponent<Kinematics>(stunIcon);
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
+
 	Scene::AdjustScrollOffset();
+
 	NewFruits();
-	player.Update();
-	
+
+	if (stun.GetStun() == false)
+	{
+		player.Update();
+	}
+
+	stunKin.SetPosition();
 }
 
 void FruitGame::KeyboardHold()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
+	auto& points = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
 	float speed = 1.f;
 	b2Vec2 vel = b2Vec2(0.f, 0.f);
 
-	if (Input::GetKey(Key::Shift) && start == true)
+	if (Input::GetKey(Key::Shift) && start == true && points.GetStun() == false)
 	{
 		speed *= 1.3f;
 	}
 
-	if (Input::GetKey(Key::A) && start==true)//left
+	if (Input::GetKey(Key::A) && start==true && points.GetStun() == false)//left
 	{
-		
 		player.GetBody()->ApplyForceToCenter(b2Vec2(-350000.f * speed, 0.f), true);
 	}
-	if (Input::GetKey(Key::D) && start == true)//right
+	if (Input::GetKey(Key::D) && start == true && points.GetStun() == false)//right
 	{
 		player.GetBody()->ApplyForceToCenter(b2Vec2(350000.f * speed, 0.f), true);
 	}
@@ -298,53 +335,125 @@ void FruitGame::KeyboardUp()
 void FruitGame::NewFruits()
 {
 	float currentTime = Timer::StopWatch(timer);
+	auto& points = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
+
+	if (points.GetStun() == true)
+	{
+		stunTracker++;
+	}
+
+	if (stunTracker == 180)
+	{
+		points.SetStun(false);
+		stunTracker = 0;
+	}
+
 	if (timer != 0 && currentTime < 90.f) 
 	{
 		if (frames == 0)
 		{
-			auto entity = ECS::CreateEntity();
-			//float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
-			float randomXVal = rand()% 220-115;
+			if (fruitCounter == 3)
+			{
+				auto entity = ECS::CreateEntity();
+				//float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
+				
+				auto randomSeed = std::default_random_engine(std::random_device{}());
+				std::uniform_real_distribution range { -115.f, 115.f };
+				//float randomXVal = rand() % 220 - 115;
+				float randomXVal = range(randomSeed);
 
-			//Add components
-			ECS::AttachComponent<Sprite>(entity);
-			ECS::AttachComponent<Transform>(entity);
-			ECS::AttachComponent<PhysicsBody>(entity);
+				//Add components
+				ECS::AttachComponent<Sprite>(entity);
+				ECS::AttachComponent<Transform>(entity);
+				ECS::AttachComponent<PhysicsBody>(entity);
+				ECS::AttachComponent<Trigger*>(entity);
 
-			//Sets up the components
-			std::string fileName = "Peach.png";
-			ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
-			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
-			ECS::GetComponent<Transform>(entity).SetPosition(vec3(45.f, -8.f, 3.f));
+				//Sets up the components
+				std::string fileName = "Coconut.png";
+				ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
+				ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+				ECS::GetComponent<Transform>(entity).SetPosition(vec3(45.f, -8.f, 3.f));
+				ECS::GetComponent<Trigger*>(entity) = new CoconutTrigger();
+				ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(entity);
 
-			auto& tempSpr = ECS::GetComponent<Sprite>(entity);
-			auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+				auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+				auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
 
-			float shrinkX = 0.f;
-			float shrinkY = 0.f;
+				float shrinkX = 0.f;
+				float shrinkY = 0.f;
 
-			b2Body* tempBody;
-			b2BodyDef tempDef;
-			tempDef.type = b2_dynamicBody;
-			tempDef.position.Set(float32(randomXVal), float32(70.f));
+				b2Body* tempBody;
+				b2BodyDef tempDef;
+				tempDef.type = b2_dynamicBody;
+				tempDef.position.Set(float32(randomXVal), float32(70.f));
 
-			tempBody = m_physicsWorld->CreateBody(&tempDef);
+				tempBody = m_physicsWorld->CreateBody(&tempDef);
 
-			tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), false, OBJECTS, PLAYER, 0.3f);
+				tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), true, OBJECTS, PLAYER | TRIGGER, 0.3f);
 
-			tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
-			std::cout << Timer::StopWatch(timer) << std::endl;
+				tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
+				std::cout << "Stunned" << std::endl;
+				fruitCounter = 0;
+			}
+
+			else
+			{
+				auto entity = ECS::CreateEntity();
+				//float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
+				float randomXVal = rand() % 220 - 115;
+
+				//Add components
+				ECS::AttachComponent<Sprite>(entity);
+				ECS::AttachComponent<Transform>(entity);
+				ECS::AttachComponent<PhysicsBody>(entity);
+				ECS::AttachComponent<Trigger*>(entity);
+
+				//Sets up the components
+				std::string fileName = "Peach.png";
+				ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
+				ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+				ECS::GetComponent<Transform>(entity).SetPosition(vec3(45.f, -8.f, 3.f));
+				ECS::GetComponent<Trigger*>(entity) = new PeachTrigger();
+				ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(entity);
+
+				auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+				auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+				float shrinkX = 0.f;
+				float shrinkY = 0.f;
+
+				b2Body* tempBody;
+				b2BodyDef tempDef;
+				tempDef.type = b2_dynamicBody;
+				tempDef.position.Set(float32(randomXVal), float32(70.f));
+
+				tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+				tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), true, OBJECTS, PLAYER | TRIGGER, 0.3f);
+
+				tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
+				std::cout << "Peach Points:" << ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer()).GetPeachPoints() << std::endl;
+			}
+
+			fruitCounter++;
 			frames++;
 		}
-		else if (frames >= 1 && frames < 60)
+
+		else if (frames >= 1 && frames < 50)
 		{
 			frames++;
 		}
-		else if (frames == 60)
+
+		else if (frames == 50)
 		{
 			frames = 0;
 		}
 	}
+}
+
+void FruitGame::UpdateFruitKinematics()
+{
+	ECS::GetComponent<Kinematics>(stunIcon).SetPosition();
 }
 
 

@@ -14,6 +14,8 @@ public:
 	void SetTriggerEntity(int triggerEnt);
 	int GetTriggerEntity();
 
+	void ClearTargetEntities();
+
 	void AddTargetMoveX(float x);
 	void AddTargetMoveY(float y);
 
@@ -28,15 +30,18 @@ public:
 
 	void AddTargetEntity(int entity);
 	void SetTargetEntities(std::vector<int> entities);
+	void SetTargetTrigger(int trigger);
+	void SetTrueTarget(int target);
 
-	void SetCheck(bool checking);
-	bool GetCheck();
 	std::vector<int> GetTargetEntities();
 	b2Vec2 movement = (b2Vec2(0.f, 0.f));
 
 
 protected:
+	int m_targetTrigger = 0;
 	int m_triggerEntity;
+	//target of trigger being targeted
+	int m_trueTarget = 0;
 	float scalar = 0;
 	float fixtures = 0;
 	float rotation = 0;
@@ -45,6 +50,5 @@ protected:
 	std::vector<PhysicsBody> m_bodies;
 	std::vector<int> m_targetX;
 	std::vector<int> m_targetY;
-	bool check = false;
 };
 
