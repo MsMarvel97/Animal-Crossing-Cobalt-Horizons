@@ -16,7 +16,10 @@ public:
 	void KeyboardDown() override;
 	void KeyboardUp() override;
 	void NewFruits();
-	void UpdateFruitKinematics();
+	void UpdateSprites();
+	std::string TimerOnes(std::string digit);
+	std::string TimerTens(std::string digit);
+	std::string TimerMinutes(std::string digit);
 
 protected:
 	PhysicsPlaygroundListener listener;
@@ -26,9 +29,20 @@ protected:
 	float limit = 2.f;
 	bool countDown = true;
 	bool start = false;
+	
+	int minutesCount = 1;
+	int tentsCount = 3;
+	int onesCount = 0;
+
 	int frames = 0;
+	int timerFrames = 0;
+
 	int fruitCounter = 0;
 	int stunTracker = 0;
 	int player = 0;
 	int stunIcon = 0;
+
+	int timerMinutes = 0;
+	int timerSecondsTens = 0;
+	int timerSecondsOnes = 0;
 };

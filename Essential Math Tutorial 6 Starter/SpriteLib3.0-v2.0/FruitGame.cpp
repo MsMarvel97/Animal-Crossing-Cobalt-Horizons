@@ -128,7 +128,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "Side1.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 50, 15);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, 2.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, -1.f));
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
@@ -160,7 +160,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "Side1.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 50, 15);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, 2.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, -1.f));
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
@@ -193,7 +193,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		std::string fileName = "boxSprite.jpg";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 1000, 15);
 		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, 2.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(30.f, -20.f, -1.f));
 		
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
@@ -232,6 +232,56 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 	}
 
+	//Minutes
+	{
+		auto entity = ECS::CreateEntity();
+		timerMinutes = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit1.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 40.f, 50.f));
+	}
+
+	//Colon
+	{
+		auto entity = ECS::CreateEntity();
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Colon.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 3, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(56.f, 40.f, 50.f));
+	}
+
+	//Seconds (10s)
+	{
+		auto entity = ECS::CreateEntity();
+		timerSecondsTens = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit3.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(62.f, 40.f, 50.f));
+	}
+
+	//Seconds (1s)
+	{
+		auto entity = ECS::CreateEntity();
+		timerSecondsOnes = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit0.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(68.f, 40.f, 50.f));
+	}
 
 		//Setup MainCamera Entity
 	{
@@ -267,6 +317,7 @@ void FruitGame::Update()
 	Scene::AdjustScrollOffset();
 
 	NewFruits();
+	UpdateSprites();
 
 	if (stun.GetStun() == false)
 	{
@@ -451,9 +502,96 @@ void FruitGame::NewFruits()
 	}
 }
 
-void FruitGame::UpdateFruitKinematics()
+void FruitGame::UpdateSprites()
 {
-	ECS::GetComponent<Kinematics>(stunIcon).SetPosition();
+	float currentTime = Timer::StopWatch(timer);
+	auto& minutes = ECS::GetComponent<Sprite>(timerMinutes);
+	auto& secondsTens = ECS::GetComponent<Sprite>(timerSecondsTens);
+	auto& secondsOnes = ECS::GetComponent<Sprite>(timerSecondsOnes);
+
+	if (timer != 0 && currentTime < 90.f)
+	{
+		if (timerFrames <= 59)
+		{
+			timerFrames++;
+		}
+		else
+		{
+			std::string time = "";
+
+			switch (onesCount) {
+			case 0:
+				time = TimerOnes("9");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 9;
+				break;
+
+			case 9:
+				time = TimerOnes("8");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 8;
+				break;
+
+			case 8:
+				time = TimerOnes("7");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 7;
+				break;
+
+			case 7:
+				time = TimerOnes("6");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 6;
+				break;
+
+			case 6:
+				time = TimerOnes("5");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 5;
+				break;
+
+			case 5:
+				time = TimerOnes("4");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 4;
+				break;
+
+			case 4:
+				time = TimerOnes("3");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 3;
+				break;
+
+			case 3:
+				time = TimerOnes("2");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 2;
+				break;
+
+			case 2:
+				time = TimerOnes("1");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 1;
+				break;
+
+			case 1:
+				time = TimerOnes("0");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 0;
+				break;
+			}
+			timerFrames = 0;
+		}
+	}
+
+}
+
+std::string FruitGame::TimerOnes(std::string digit)
+{
+	std::string base = "Digit";
+	std::string ones = digit;
+	std::string time = base + ones + ".png";
+	return time;
 }
 
 
