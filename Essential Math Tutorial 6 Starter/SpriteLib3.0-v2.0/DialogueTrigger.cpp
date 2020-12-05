@@ -30,6 +30,24 @@ void DialogueTrigger::OnEnter()
 	case(7):
 		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetBookThree(true);
 		break;
+	case(8):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetRollOne(true);
+		break;
+	case(9):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetRollTwo(true);
+		break;
+	case(10):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetRollThree(true);
+		break;
+	case(11):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentOne(true);
+		break;
+	case(12):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentTwo(true);
+		break;
+	case(13):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentThree(true);
+		break;
 	}
 }
 
@@ -61,6 +79,24 @@ void DialogueTrigger::OnExit()
 		break;
 	case(7):
 		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetBookThree(false);
+		break;
+	case(8):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetRollOne(false);
+		break;
+	case(9):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetRollTwo(false);
+		break;
+	case(10):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetRollThree(false);
+		break;
+	case(11):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentOne(false);
+		break;
+	case(12):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentTwo(false);
+		break;
+	case(13):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentThree(false);
 		break;
 	}
 }

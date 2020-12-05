@@ -1173,8 +1173,6 @@ void Cafe::KeyboardDown()
 	{
 		int orderIndex = 0;
 		srand(time(0) + rand());
-
-
 		
 			custOrder[0] = rand() % 4;
 		

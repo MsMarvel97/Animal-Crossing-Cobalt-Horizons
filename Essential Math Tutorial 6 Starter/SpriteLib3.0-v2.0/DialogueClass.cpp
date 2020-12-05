@@ -71,3 +71,57 @@ bool DialogueClass::GetBookThree()
 {
 	return m_bookThree;
 }
+
+void DialogueClass::SetRollOne(bool check)
+{
+	m_rollOne = check;
+}
+bool DialogueClass::GetRollOne()
+{
+	return m_rollOne;
+}
+
+void DialogueClass::SetRollTwo(bool check)
+{
+	m_rollTwo = check;
+}
+bool DialogueClass::GetRollTwo()
+{
+	return m_rollTwo;
+}
+
+void DialogueClass::SetRollThree(bool check)
+{
+	m_rollThree = check;
+}
+bool DialogueClass::GetRollThree()
+{
+	return m_rollThree;
+}
+
+void DialogueClass::SetInstrumentOne(bool check)
+{
+	m_instrumentOne = check;
+}
+bool DialogueClass::GetInstrumentOne()
+{
+	return m_instrumentOne;
+}
+
+void DialogueClass::SetInstrumentTwo(bool check)
+{
+	m_instrumentTwo = check;
+}
+bool DialogueClass::GetInstrumentTwo()
+{
+	return m_instrumentTwo;
+}
+
+void DialogueClass::SetInstrumentThree(bool check)
+{
+	m_instrumentThree = check;
+}
+bool DialogueClass::GetInstrumentThree()
+{
+	return m_instrumentThree;
+}

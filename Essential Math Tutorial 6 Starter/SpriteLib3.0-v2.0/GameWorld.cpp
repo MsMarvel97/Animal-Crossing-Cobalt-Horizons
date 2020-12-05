@@ -81,7 +81,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_dynamicBody;
-		tempDef.position.Set(float32(100.f), float32(-30.f));
+		tempDef.position.Set(float32(150.f), float32(-80.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 		tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetHeight() - shrinkY) / 2.f), vec2(0.f, 0.f), false, PLAYER, ENEMY | OBJECTS | PICKUP | TRIGGER, 0.5f, 3.f);
@@ -610,17 +610,48 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "photoDen.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 5, 512 / 5);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -50.f, 3.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -50.f, 100.f));
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
 
 		float shrinkX = 0.f;
-		float shrinkY = 0.f;
+		float shrinkY = 30.f;
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(410.f), float32(200.f));
+		tempDef.position.Set(float32(390.f), float32(200.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX),
+			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "photoDen.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 5, 512 / 10);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -50.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 30.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(390.f), float32(155.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -775,6 +806,228 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetPosition(b2Vec2(-30, 250));
 	}
 
+	//Setup Roll One
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		rollOne = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "rollTemp.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 450 / 19, 470 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(120.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(8);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(-30.f), float32(-60.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(-80, -65));
+	}
+
+	//Setup Roll Two
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		rollTwo = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "rollTemp.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 450 / 19, 470 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(120.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(9);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(35, 100));
+	}
+
+	//Setup Roll Three
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		rollThree = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "rollTemp.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 450 / 19, 470 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(120.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(10);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(150, 340));
+	}
+
+	//Setup Instrument One
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		instrumentOne = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "recordTemp.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(11);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(300, 340));
+	}
+
+	//Setup Instrument Two
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		instrumentTwo = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "drumSticksTemp.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(12);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(200, 340));
+	}
+
+	//Setup Instrument Three
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		instrumentThree = entity;
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "headphonesTemp.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(13);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(50, 340));
+	}
+
 	//Setup Cafe Trigger
 	{
 		//Creates entity
@@ -888,6 +1141,137 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetPosition(b2Vec2(340, -40));
 	}
 
+	//Setup Winston Trigger
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "filler.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 30, 30);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 2.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(4);
+
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-40.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(130, 200));
+	}
+
+	//Setup Kainat Trigger
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "filler.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 30, 30);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 2.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(0);
+
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-40.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(0, -70));
+	}
+
+	//Setup Kyra Trigger
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "filler.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 30, 30);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 2.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(1);
+
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(-5.f), float32(190.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(-5, 180));
+	}
+
+	//Testing dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "rollTemp.jpg";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 450 / 6, 470 / 6);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(210.f, -40.f, 3.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
 	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 }
@@ -902,7 +1286,7 @@ void GameWorld::KeyboardHold()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 
-	float speed = 1.f;
+	float speed = 2.f;
 	vec3 vel = vec3(0.f, 0.f, 0.f);
 
 	if (Input::GetKey(Key::Shift))
@@ -913,22 +1297,22 @@ void GameWorld::KeyboardHold()
 	if (Input::GetKey(Key::A))//left
 	{
 		//player.GetBody()->ApplyForceToCenter(b2Vec2(-400.f * speed, 0.f), true);
-		vel = vel + vec3(-5.f, 0.f, 0.f);
+		vel = vel + vec3(-10.f, 0.f, 0.f);
 	}
 	if (Input::GetKey(Key::D))//right
 	{
 		//player.GetBody()->ApplyForceToCenter(b2Vec2(400.f * speed, 0.f), true);
-		vel = vel + vec3(5.f, 0.f, 0.f);
+		vel = vel + vec3(10.f, 0.f, 0.f);
 	}
 	if (Input::GetKey(Key::W))//up
 	{
 		//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, 400.f * speed), true);
-		vel = vel + vec3(0.f, 5.f, 0.f);
+		vel = vel + vec3(0.f, 10.f, 0.f);
 	}
 	if (Input::GetKey(Key::S))//down
 	{
 		//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, -400.f * speed), true);
-		vel = vel + vec3(0.f, -5.f, 0.f);
+		vel = vel + vec3(0.f, -10.f, 0.f);
 	}
 	player.SetVelocity(vel * speed);
 
@@ -953,20 +1337,49 @@ void GameWorld::KeyboardDown()
 
 	if (Input::GetKeyDown(Key::E) && talk.GetMithunan() == true)
 	{
-		std::cout << "It works.\n";
+		if (rollsFound == 3)
+		{
+			std::cout << "MOM GET THE CAMERA! Thanks for finding all my film rolls!\n";
+		}
+		else
+		{
+			std::cout << "MOM GET THE CAMERA?! Can you find my three missing film rolls?\n";
+		}
 	}
 
 	if (Input::GetKeyDown(Key::E) && talk.GetStevie() == true)
 	{
 		if (booksFound == 3)
 		{
-			std::cout << "Yay! Thanks for finding all my library books!";
+			std::cout << "Yay! Thanks for finding all my library books!\n";
 		}
 		else
 		{
 			std::cout << "Can you find my three missing library books?.\n";
 		}
 		
+	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetWinston() == true)
+	{
+		if (instrumentsFound == 3)
+		{
+			std::cout << "Ohhh, you found my stuff! Here's some tickets to the next Coachella Concert where I'll be performing.\n";
+		}
+		else
+		{
+			std::cout << "My brother Winston The Second lost my music stuff. Can you find them please?.\n";
+		}
+	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetKainat() == true)
+	{
+		std::cout << "Wazzz up?\n";
+	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetKyra() == true)
+	{
+		std::cout << "Testing?\n";
 	}
 
 	if (Input::GetKeyDown(Key::E) && talk.GetBookOne() == true && bookOneTriggered == false)
@@ -993,5 +1406,55 @@ void GameWorld::KeyboardDown()
 		ECS::GetComponent<Sprite>(bookThree).SetTransparency(0.f);
 		bookThreeTriggered = true;
 	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetRollOne() == true && rollOneTriggered == false)
+	{
+		std::cout << "Roll collected.\n";
+		rollsFound += 1;
+		std::cout << "Rolls found: " << rollsFound << ".\n";
+		ECS::GetComponent<Sprite>(rollOne).SetTransparency(0.f);
+		rollOneTriggered = true;
+	}
+	else if (Input::GetKeyDown(Key::E) && talk.GetRollTwo() == true && rollTwoTriggered == false)
+	{
+		std::cout << "Roll collected.\n";
+		rollsFound += 1;
+		std::cout << "Rolls found: " << rollsFound << ".\n";
+		ECS::GetComponent<Sprite>(rollTwo).SetTransparency(0.f);
+		rollTwoTriggered = true;
+	}
+	else if (Input::GetKeyDown(Key::E) && talk.GetRollThree() == true && rollThreeTriggered == false)
+	{
+		std::cout << "Roll collected.\n";
+		rollsFound += 1;
+		std::cout << "Rolls found: " << rollsFound << ".\n";
+		ECS::GetComponent<Sprite>(rollThree).SetTransparency(0.f);
+		rollThreeTriggered = true;
+	}
 	
+	if (Input::GetKeyDown(Key::E) && talk.GetInstrumentOne() == true && instrumentOneTriggered == false)
+	{
+		std::cout << "Instrument collected.\n";
+		instrumentsFound += 1;
+		std::cout << "Instruments found: " << instrumentsFound << ".\n";
+		ECS::GetComponent<Sprite>(instrumentOne).SetTransparency(0.f);
+		instrumentOneTriggered = true;
+	}
+	else if (Input::GetKeyDown(Key::E) && talk.GetInstrumentTwo() == true && instrumentTwoTriggered == false)
+	{
+		std::cout << "Instrument collected.\n";
+		instrumentsFound += 1;
+		std::cout << "Instruments found: " << instrumentsFound << ".\n";
+		ECS::GetComponent<Sprite>(instrumentTwo).SetTransparency(0.f);
+		instrumentTwoTriggered = true;
+	}
+	else if (Input::GetKeyDown(Key::E) && talk.GetInstrumentThree() == true && instrumentThreeTriggered == false)
+	{
+		std::cout << "Instrument collected.\n";
+		instrumentsFound += 1;
+		std::cout << "Instruments found: " << instrumentsFound << ".\n";
+		ECS::GetComponent<Sprite>(instrumentThree).SetTransparency(0.f);
+		instrumentThreeTriggered = true;
+	}
 }
+

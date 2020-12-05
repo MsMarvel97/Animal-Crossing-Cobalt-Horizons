@@ -17,6 +17,7 @@ public:
 	void SetWinston(bool check);//setter
 	bool GetWinston();//getter
 
+	//Stevie's lost items
 	void SetBookOne(bool check);//setter
 	bool GetBookOne();//getter
 
@@ -25,6 +26,26 @@ public:
 
 	void SetBookThree(bool check);//setter
 	bool GetBookThree();//getter
+
+	//Mithunan's lost items
+	void SetRollOne(bool check);//setter
+	bool GetRollOne();//getter
+
+	void SetRollTwo(bool check);//setter
+	bool GetRollTwo();//getter
+
+	void SetRollThree(bool check);//setter
+	bool GetRollThree();//getter
+
+	//Winston's lost items
+	void SetInstrumentOne(bool check);//setter
+	bool GetInstrumentOne();//getter
+
+	void SetInstrumentTwo(bool check);//setter
+	bool GetInstrumentTwo();//getter
+
+	void SetInstrumentThree(bool check);//setter
+	bool GetInstrumentThree();//getter
 
 protected:
 	bool m_kainat = false;
@@ -35,8 +56,14 @@ protected:
 	bool m_bookOne = false;
 	bool m_bookTwo = false;
 	bool m_bookThree = false;
+	bool m_rollOne = false;
+	bool m_rollTwo = false;
+	bool m_rollThree = false;
+	bool m_instrumentOne = false;
+	bool m_instrumentTwo = false;
+	bool m_instrumentThree = false;
 
-	int m_bookCount = 0;
+	//int m_bookCount = 0;
 
 };
 
