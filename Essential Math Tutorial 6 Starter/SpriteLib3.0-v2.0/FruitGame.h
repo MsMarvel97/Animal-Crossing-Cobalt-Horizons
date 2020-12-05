@@ -17,9 +17,7 @@ public:
 	void KeyboardUp() override;
 	void NewFruits();
 	void UpdateSprites();
-	std::string TimerOnes(std::string digit);
-	std::string TimerTens(std::string digit);
-	std::string TimerMinutes(std::string digit);
+	std::string TimerStrings(std::string digit);
 
 protected:
 	PhysicsPlaygroundListener listener;
@@ -31,7 +29,7 @@ protected:
 	bool start = false;
 	
 	int minutesCount = 1;
-	int tentsCount = 3;
+	int tensCount = 3;
 	int onesCount = 0;
 
 	int frames = 0;
@@ -45,4 +43,7 @@ protected:
 	int timerMinutes = 0;
 	int timerSecondsTens = 0;
 	int timerSecondsOnes = 0;
+
+	bool tens = false;
+	bool minutes = false;
 };

@@ -93,6 +93,16 @@ void Game::Update()
 {
 	//Update timer
 	Timer::Update();
+
+	float startTicks = SDL_GetTicks();
+
+	float frameTicks = SDL_GetTicks() - startTicks;
+
+	if (1000.f / 120.f > frameTicks)
+	{
+		SDL_Delay(1000.f / 120.f - frameTicks);
+
+	}
 	//Update the backend
 	BackEnd::Update(m_register);
 

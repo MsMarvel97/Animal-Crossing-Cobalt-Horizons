@@ -374,6 +374,10 @@ void FruitGame::KeyboardDown()
 		}
 		std::cout << Timer::StopWatch(timer) <<std::endl;
 	}
+	if (Input::GetKeyDown(Key::R))
+	{
+		Scene::SetScene(m_sceneReg[3]);
+	}
 		
 }
 
@@ -505,7 +509,7 @@ void FruitGame::NewFruits()
 void FruitGame::UpdateSprites()
 {
 	float currentTime = Timer::StopWatch(timer);
-	auto& minutes = ECS::GetComponent<Sprite>(timerMinutes);
+	auto& minutesSprite = ECS::GetComponent<Sprite>(timerMinutes);
 	auto& secondsTens = ECS::GetComponent<Sprite>(timerSecondsTens);
 	auto& secondsOnes = ECS::GetComponent<Sprite>(timerSecondsOnes);
 
@@ -521,72 +525,168 @@ void FruitGame::UpdateSprites()
 
 			switch (onesCount) {
 			case 0:
-				time = TimerOnes("9");
+				time = TimerStrings("9");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 9;
+				tens = true;
 				break;
 
 			case 9:
-				time = TimerOnes("8");
+				time = TimerStrings("8");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 8;
 				break;
 
 			case 8:
-				time = TimerOnes("7");
+				time = TimerStrings("7");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 7;
 				break;
 
 			case 7:
-				time = TimerOnes("6");
+				time = TimerStrings("6");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 6;
 				break;
 
 			case 6:
-				time = TimerOnes("5");
+				time = TimerStrings("5");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 5;
 				break;
 
 			case 5:
-				time = TimerOnes("4");
+				time = TimerStrings("4");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 4;
 				break;
 
 			case 4:
-				time = TimerOnes("3");
+				time = TimerStrings("3");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 3;
 				break;
 
 			case 3:
-				time = TimerOnes("2");
+				time = TimerStrings("2");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 2;
 				break;
 
 			case 2:
-				time = TimerOnes("1");
+				time = TimerStrings("1");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 1;
 				break;
 
 			case 1:
-				time = TimerOnes("0");
+				time = TimerStrings("0");
 				secondsOnes.LoadSprite(time, 5, 8);
 				onesCount = 0;
 				break;
 			}
+
+			if (tens == true)
+			{
+				switch (tensCount)
+				{
+				case 0:
+					time = TimerStrings("5");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 5;
+					minutes = true;
+					break;
+
+				case 5:
+					time = TimerStrings("4");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 4;
+					break;
+
+				case 4:
+					time = TimerStrings("3");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 3;
+					break;
+
+				case 3:
+					time = TimerStrings("2");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 2;
+					break;
+
+				case 2:
+					time = TimerStrings("1");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 1;
+					break;
+
+				case 1:
+					time = TimerStrings("0");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 0;
+					break;
+				}
+				}
+
+			if (minutes == true)
+			{
+				switch (minutesCount)
+				{
+				case 0:
+					time = TimerStrings("6");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 6;
+					break;
+
+				case 6:
+					time = TimerStrings("5");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 5;
+					break;
+
+				case 5:
+					time = TimerStrings("4");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 4;
+					break;
+
+				case 4:
+					time = TimerStrings("3");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 3;
+					break;
+
+				case 3:
+					time = TimerStrings("2");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 2;
+					break;
+
+				case 2:
+					time = TimerStrings("1");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 1;
+					break;
+
+				case 1:
+					time = TimerStrings("0");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 0;
+					break;
+				}
+			}
 			timerFrames = 0;
+			minutes = false;
+			tens = false;
+			}
 		}
+
 	}
 
-}
 
-std::string FruitGame::TimerOnes(std::string digit)
+
+std::string FruitGame::TimerStrings(std::string digit)
 {
 	std::string base = "Digit";
 	std::string ones = digit;
