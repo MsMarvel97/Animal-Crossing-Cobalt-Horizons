@@ -790,7 +790,7 @@ void Cafe::Update()
 	//Scene::AdjustScrollOffset();
 	player.Update();
 	//std::cout << currentTime << "\n";
-	if (currentTime > 10.f)
+	if (currentTime > 90.f)
 	{
 		gameOver = true;
 	}
