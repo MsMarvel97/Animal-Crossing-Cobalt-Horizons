@@ -126,11 +126,11 @@ void Scene::CreateCameraEntity(bool mainCamera, float windowWidth, float windowH
 	}
 }
 
-int Scene::ChangeScene(int newScene, bool swap)
+int Scene::ChangeScene()
 {
-	if (newScene >= 0)
+	if (swap == true)
 	{
-		return newScene;
+		return sceneSwap;
 	}
 	else
 	{
@@ -146,6 +146,17 @@ entt::registry* Scene::GetScene() const
 void Scene::SetScene(entt::registry& scene)
 {
 	m_sceneReg = &scene;
+}
+
+void Scene::SceneChange(bool next, int newScene)
+{
+	swap = next;
+	sceneSwap = newScene;
+}
+
+int Scene::GetNewScene()
+{
+	return sceneSwap;
 }
 
 vec4 Scene::GetClearColor() const

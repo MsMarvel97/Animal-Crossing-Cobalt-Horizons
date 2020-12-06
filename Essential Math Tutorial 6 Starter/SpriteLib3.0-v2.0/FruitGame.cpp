@@ -379,7 +379,7 @@ void FruitGame::KeyboardDown()
 	}
 	if (Input::GetKeyDown(Key::R))
 	{
-		scene->NewScene(3);
+		Scene::SceneChange(true, 3);
 	}
 		
 }

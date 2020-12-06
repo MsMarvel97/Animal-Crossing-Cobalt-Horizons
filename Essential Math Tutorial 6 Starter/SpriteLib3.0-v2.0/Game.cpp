@@ -111,6 +111,8 @@ void Game::Update()
 
 	//Updates the active scene
 	m_activeScene->Update();
+
+	NewScene();
 }
 
 void Game::GUI()
@@ -144,18 +146,21 @@ void Game::CheckEvents()
 		MouseWheel(BackEnd::GetWheelEvent());
 }
 
-void Game::NewScene(int sceneNumber)
+void Game::NewScene()
 {
-	m_activeScene->Unload();
+	if (m_activeScene->ChangeScene() != -1)
+	{
+		m_activeScene->Unload();
 
-	MainEntities::ResetEntities();
+		MainEntities::ResetEntities();
 
-	m_activeScene = m_scenes[sceneNumber];
-	m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
-	m_register = m_activeScene->GetScene();
+		m_activeScene = m_scenes[m_activeScene->GetNewScene()];
+		m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
+		m_register = m_activeScene->GetScene();
 
-	BackEnd::SetWindowName(m_activeScene->GetName());
-	PhysicsSystem::Init();
+		BackEnd::SetWindowName(m_activeScene->GetName());
+		PhysicsSystem::Init();
+	}
 }
 
 void Game::AcceptInput()

@@ -39,7 +39,8 @@ public:
 	virtual void KeyboardHold() { };
 	virtual void KeyboardDown() { };
 	virtual void KeyboardUp() { };
-	int ChangeScene(int newScene);
+	//checks conditions for scene change
+	int ChangeScene();
 
 	//Mouse Input
 	//Because these are virtual you can override them in your inherited classes.
@@ -52,6 +53,11 @@ public:
 	entt::registry* GetScene() const;
 	//Set the scene registry
 	void SetScene(entt::registry& scene);
+
+	//controls bool which implicates scene change
+	void SceneChange(bool next, int newScene);
+
+	int GetNewScene();
 
 	//Gets the background color of the scene
 	vec4 GetClearColor() const;
@@ -74,6 +80,9 @@ public:
 protected:
 	b2World* m_physicsWorld = nullptr;
 	b2Vec2 m_gravity = b2Vec2(float32(0.f), float32(0.f));
+
+	bool swap = false;
+	int sceneSwap = 0;
 
 	vec4 m_clearColor = vec4(0.15f, 0.33f, 0.58f, 1.f);
 

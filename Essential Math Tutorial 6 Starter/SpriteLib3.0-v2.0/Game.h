@@ -46,7 +46,7 @@ public:
 	//*Checks the results of the events that have been polled
 	void CheckEvents();
 
-	void NewScene(int sceneNumber);
+	void NewScene();
 
 	/*Input Functions*/
 	void AcceptInput();
