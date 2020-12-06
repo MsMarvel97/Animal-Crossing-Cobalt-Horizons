@@ -6,7 +6,10 @@
 #include "Timer.h"
 #include "Xinput.h"
 #include "MainEntities.h"
+#include "SDL2/SDL_mixer.h"
+
 #include <SDL2/SDL.h>
+
 
 
 class Scene
@@ -39,6 +42,7 @@ public:
 	virtual void KeyboardHold() { };
 	virtual void KeyboardDown() { };
 	virtual void KeyboardUp() { };
+
 	//checks conditions for scene change
 	int ChangeScene();
 

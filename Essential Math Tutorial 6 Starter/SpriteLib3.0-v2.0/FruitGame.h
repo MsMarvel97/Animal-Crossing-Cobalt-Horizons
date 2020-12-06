@@ -15,8 +15,11 @@ public:
 	void KeyboardHold() override;
 	void KeyboardDown() override;
 	void KeyboardUp() override;
+
 	void NewFruits();
 	void UpdateSprites();
+	void UpdatePoints();
+	void UpdateCamera();
 	std::string TimerStrings(std::string digit);
 
 protected:
@@ -40,10 +43,18 @@ protected:
 	int player = 0;
 	int stunIcon = 0;
 
+	int pointsTens = 0;
+	int pointsOnes = 0;
+
+	int pointsTensCount = 0;
+	int pointsOnesCount = 0;
+
 	int timerMinutes = 0;
 	int timerSecondsTens = 0;
 	int timerSecondsOnes = 0;
 
 	bool tens = false;
 	bool minutes = false;
+	
+	bool pointsTensFlag = false;
 };

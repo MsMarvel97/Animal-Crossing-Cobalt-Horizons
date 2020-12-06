@@ -156,6 +156,7 @@ void Game::NewScene()
 
 		m_activeScene = m_scenes[m_activeScene->GetNewScene()];
 		m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
+
 		m_register = m_activeScene->GetScene();
 
 		BackEnd::SetWindowName(m_activeScene->GetName());

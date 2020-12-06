@@ -19,3 +19,13 @@ bool PlayerPoints::GetStun()
 {
 	return stun;
 }
+
+void PlayerPoints::SetPointGain(bool gain)
+{
+	gainPoint = gain;
+}
+
+bool PlayerPoints::GetPointGain()
+{
+	return gainPoint;
+}

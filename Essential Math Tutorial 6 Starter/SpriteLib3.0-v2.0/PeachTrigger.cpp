@@ -10,6 +10,7 @@ void PeachTrigger::OnEnter()
 		if (ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer()).GetStun() == false)
 		{
 			ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer()).GainPeachPoint();
+			ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer()).SetPointGain(true);
 		}
 
 		PhysicsBody::m_bodiesToDelete.push_back(m_targetEntities[i]);

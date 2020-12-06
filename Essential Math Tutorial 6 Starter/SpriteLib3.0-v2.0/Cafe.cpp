@@ -18,6 +18,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 {
 	//Dynamically allocates the register
 	m_sceneReg = new entt::registry;
+	m_physicsWorld = new b2World(m_gravity);
 
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
@@ -281,7 +282,7 @@ void Cafe::KeyboardHold()
 
 	if (Input::GetKey(Key::Shift))
 	{
-		speed *= 10.f;
+		Scene::SceneChange(true, 5);
 	}
 
 	if (Input::GetKey(Key::A))//left
