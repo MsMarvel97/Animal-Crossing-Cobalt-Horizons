@@ -15,7 +15,6 @@ public:
 	void KeyboardHold() override;
 	void KeyboardDown() override;
 	//void KeyboardUp override;
-	void CurrentTime();
 
 	float treeX = -180.f;
 	float treeY = -50.f;
@@ -48,5 +47,7 @@ protected:
 	int instrumentOne;
 	int instrumentTwo;
 	int instrumentThree;
+
+	
 };
 

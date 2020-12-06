@@ -48,6 +48,9 @@ void DialogueTrigger::OnEnter()
 	case(13):
 		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentThree(true);
 		break;
+	case(14):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetCafe(true);
+		break;
 	}
 }
 
@@ -97,6 +100,9 @@ void DialogueTrigger::OnExit()
 		break;
 	case(13):
 		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetInstrumentThree(false);
+		break;
+	case(14):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetCafe(false);
 		break;
 	}
 }

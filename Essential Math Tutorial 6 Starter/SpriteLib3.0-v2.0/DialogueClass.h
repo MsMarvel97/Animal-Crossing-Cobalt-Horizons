@@ -47,6 +47,10 @@ public:
 	void SetInstrumentThree(bool check);//setter
 	bool GetInstrumentThree();//getter
 
+	//Cafe Chaos
+	void SetCafe(bool check);//setter
+	bool GetCafe();//getter
+
 protected:
 	bool m_kainat = false;
 	bool m_kyra = false;
@@ -62,6 +66,7 @@ protected:
 	bool m_instrumentOne = false;
 	bool m_instrumentTwo = false;
 	bool m_instrumentThree = false;
+	bool m_cafe = false;
 
 	//int m_bookCount = 0;
 

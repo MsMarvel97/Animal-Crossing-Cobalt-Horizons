@@ -9,9 +9,7 @@ Cafe::Cafe(std::string name)
 {
 	//No gravity this is a top down scene
 	m_gravity = b2Vec2(0.f, 0.f);
-	m_physicsWorld->SetGravity(m_gravity);
-
-	m_physicsWorld->SetContactListener(&listener);
+	m_physicsWorld->SetGravity(m_gravity);	
 }
 //register stuff
 void Cafe::InitScene(float windowWidth, float windowHeight)
@@ -19,7 +17,9 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 	
 	//Dynamically allocates the register
 	m_sceneReg = new entt::registry;
-
+	m_physicsWorld = new b2World(m_gravity);
+	m_physicsWorld->SetContactListener(&listener);
+	SetSceneChange(false, -1);
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
 
@@ -118,7 +118,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		//Sets up components
 		std::string fileName = "floor.png";
-		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 838 / 4, 671 / 4);
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 838 / 3.5, 671 / 3.5);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 15.f, 0.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 	}
@@ -242,7 +242,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(0.f), float32(70.f));
+		tempDef.position.Set(float32(0.f), float32(80.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -777,6 +777,88 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 	}
 	
+	//Minutes
+	{
+		auto entity = ECS::CreateEntity();
+		timerMinutes = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit1.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 40.f, 50.f));
+	}
+
+	//Colon
+	{
+		auto entity = ECS::CreateEntity();
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Colon.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 3, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(56.f, 40.f, 50.f));
+	}
+
+	//Seconds (10s)
+	{
+		auto entity = ECS::CreateEntity();
+		timerSecondsTens = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit3.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(62.f, 40.f, 50.f));
+	}
+
+	//Seconds (1s)
+	{
+		auto entity = ECS::CreateEntity();
+		timerSecondsOnes = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit0.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(68.f, 40.f, 50.f));
+	}
+
+	//Points(ten)
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		pointTens = entity;
+		//set up components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		
+		std::string fileName = "Digit0.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(90.f, 80.f, 50.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		std::cout << fileName;
+	}
+	//Points(one)
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		pointOnes = entity;
+		//set up components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "Digit0.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(98.f, 80.f, 50.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		std::cout << fileName;
+	}
+
 	/*ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));*/
 }
@@ -794,6 +876,7 @@ void Cafe::Update()
 	{
 		gameOver = true;
 	}
+	
 	if (gameOver == true)
 	{
 		ECS::GetComponent<Sprite>(timesUpSign).SetTransparency(1.f);
@@ -807,6 +890,7 @@ void Cafe::Update()
 	{
 		CurrentTime();
 	}
+	UpdateSprites();
 }
 
 
@@ -827,22 +911,22 @@ void Cafe::KeyboardHold()
 		if (Input::GetKey(Key::A))//left
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(-400.f * speed, 0.f), true);
-			vel = vel + vec3(-7.f, 0.f, 0.f);
+			vel = vel + vec3(-50.f, 0.f, 0.f);
 		}
 		if (Input::GetKey(Key::D))//right
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(400.f * speed, 0.f), true);
-			vel = vel + vec3(7.f, 0.f, 0.f);
+			vel = vel + vec3(50.f, 0.f, 0.f);
 		}
 		if (Input::GetKey(Key::W))//up
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, 400.f * speed), true);
-			vel = vel + vec3(0.f, 7.f, 0.f);
+			vel = vel + vec3(0.f, 50.f, 0.f);
 		}
 		if (Input::GetKey(Key::S))//down
 		{
 			//player.GetBody()->ApplyForceToCenter(b2Vec2(0.f, -400.f * speed), true);
-			vel = vel + vec3(0.f, -7.f, 0.f);
+			vel = vel + vec3(0.f, -50.f, 0.f);
 		}
 		player.SetVelocity(vel * speed);
 	}
@@ -1148,11 +1232,20 @@ void Cafe::KeyboardDown()
 				std::cout << "\n";
 
 				ordersComplete += 1;//increases the number of orders the player has successfully completed by 1.
+				one += 1;
+				UpdatePoints();
 			}
 			else
 			{
 				std::cout << "The order is wrong\n";
 			}
+		}
+	}
+	if (gameOver == true)//exit mini-game
+	{
+		if (Input::GetKeyDown(Key::Space))
+		{
+			Scene::SetSceneChange(true, 5);
 		}
 	}
 	if (gameOver == true && repeat == true)
@@ -1168,38 +1261,17 @@ void Cafe::KeyboardDown()
 			timer = Timer::time;
 		}
 	}
-	//manual new order override
+	//manual point increase
+	if (Input::GetKeyDown(Key::N))
+	{
+		ordersComplete += 1;//increases the number of orders the player has successfully completed by 1.
+		one += 1;
+		UpdatePoints();
+	}
+	//manual scene swicth
 	if (Input::GetKeyDown(Key::Y))
 	{
-		int orderIndex = 0;
-		srand(time(0) + rand());
-		
-			custOrder[0] = rand() % 4;
-		
-			custOrder[1] = rand() % 5;
-		
-			custOrder[2] = rand() % 5;
-		
-			custOrder[3] = rand() % 4;
-			while (custOrder[0] == 0)
-			{
-				custOrder[0] = rand() % 4;
-			}
-			while (custOrder[1] == 0)
-			{
-				custOrder[1] = rand() % 4;
-			}
-			while (custOrder[2] == 0)
-			{
-				custOrder[2] = rand() % 4;
-			}
-			while (custOrder[3] == 0)
-			{
-				custOrder[3] = rand() % 4;
-			}
-		
-		std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
-		std::cout << "\n";
+		Scene::SetSceneChange(true, 5);
 	}
 }
 
@@ -1208,3 +1280,293 @@ void Cafe::CurrentTime()
 	currentTime = Timer::StopWatch(timer);
 }
 
+void Cafe::UpdateSprites()
+{
+	float currentTime = Timer::StopWatch(timer);
+	auto& minutesSprite = ECS::GetComponent<Sprite>(timerMinutes);
+	auto& secondsTens = ECS::GetComponent<Sprite>(timerSecondsTens);
+	auto& secondsOnes = ECS::GetComponent<Sprite>(timerSecondsOnes);
+
+	const float timing = 1 / 60.f;
+	static float remainder = 0.f;
+	static int counter = 0;
+
+	if (timer == 0 || currentTime >= 90)
+	{
+		return;
+	}
+		remainder += Timer::deltaTime;
+		while (remainder >= timing)
+		{
+			remainder -= timing;
+			counter++;
+		}
+
+		if(counter >= 60)
+		{
+			std::string time = "";
+
+			switch (onesCount) {
+			case 0:
+				time = TimerStrings("9");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 9;
+				tens = true;
+				break;
+
+			case 9:
+				time = TimerStrings("8");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 8;
+				break;
+
+			case 8:
+				time = TimerStrings("7");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 7;
+				break;
+
+			case 7:
+				time = TimerStrings("6");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 6;
+				break;
+
+			case 6:
+				time = TimerStrings("5");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 5;
+				break;
+
+			case 5:
+				time = TimerStrings("4");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 4;
+				break;
+
+			case 4:
+				time = TimerStrings("3");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 3;
+				break;
+
+			case 3:
+				time = TimerStrings("2");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 2;
+				break;
+
+			case 2:
+				time = TimerStrings("1");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 1;
+				break;
+
+			case 1:
+				time = TimerStrings("0");
+				secondsOnes.LoadSprite(time, 5, 8);
+				onesCount = 0;
+				break;
+			}
+
+			if (tens == true)
+			{
+				switch (tensCount)
+				{
+				case 0:
+					time = TimerStrings("5");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 5;
+					minutes = true;
+					break;
+
+				case 5:
+					time = TimerStrings("4");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 4;
+					break;
+
+				case 4:
+					time = TimerStrings("3");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 3;
+					break;
+
+				case 3:
+					time = TimerStrings("2");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 2;
+					break;
+
+				case 2:
+					time = TimerStrings("1");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 1;
+					break;
+
+				case 1:
+					time = TimerStrings("0");
+					secondsTens.LoadSprite(time, 5, 8);
+					tensCount = 0;
+					break;
+				}
+			}
+
+			if (minutes == true)
+			{
+				switch (minutesCount)
+				{
+				case 0:
+					time = TimerStrings("6");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 6;
+					break;
+
+				case 6:
+					time = TimerStrings("5");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 5;
+					break;
+
+				case 5:
+					time = TimerStrings("4");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 4;
+					break;
+
+				case 4:
+					time = TimerStrings("3");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 3;
+					break;
+
+				case 3:
+					time = TimerStrings("2");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 2;
+					break;
+
+				case 2:
+					time = TimerStrings("1");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 1;
+					break;
+
+				case 1:
+					time = TimerStrings("0");
+					minutesSprite.LoadSprite(time, 5, 8);
+					minutesCount = 0;
+					break;
+				}
+			}
+			counter -= 60;
+			minutes = false;
+			tens = false;
+		}
+	}
+
+
+//updates the points counter
+void Cafe::UpdatePoints()
+{
+	auto& oneSprite = ECS::GetComponent<Sprite>(pointOnes);
+	auto& tenSprite = ECS::GetComponent<Sprite>(pointTens);
+	std::string digit = "";
+
+	switch (one) {
+	case 0:
+		digit = TimerStrings("0");
+		oneSprite.LoadSprite(digit, 5, 8);
+		ten += 1;
+		break;
+	case 1:
+		digit = TimerStrings("1");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 2:
+		digit = TimerStrings("2");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 3:
+		digit = TimerStrings("3");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 4:
+		digit = TimerStrings("4");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 5:
+		digit = TimerStrings("5");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 6:
+		digit = TimerStrings("6");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 7:
+		digit = TimerStrings("7");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 8:
+		digit = TimerStrings("8");
+		oneSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 9:
+		digit = TimerStrings("9");
+		oneSprite.LoadSprite(digit, 5, 8);
+		one = -1;
+		
+		break;
+	}
+
+	switch (ten) {
+	case 0:
+		digit = TimerStrings("0");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 1:
+		digit = TimerStrings("1");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 2:
+		digit = TimerStrings("2");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 3:
+		digit = TimerStrings("3");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 4:
+		digit = TimerStrings("4");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 5:
+		digit = TimerStrings("5");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 6:
+		digit = TimerStrings("6");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 7:
+		digit = TimerStrings("7");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 8:
+		digit = TimerStrings("8");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	case 9:
+		digit = TimerStrings("9");
+		tenSprite.LoadSprite(digit, 5, 8);
+		break;
+	}
+}
+
+std::string Cafe::TimerStrings(std::string digit)
+{
+	std::string base = "Digit";
+	std::string ones = digit;
+	std::string time = base + ones + ".png";
+	return time;
+}

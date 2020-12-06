@@ -125,6 +125,34 @@ void Scene::CreateCameraEntity(bool mainCamera, float windowWidth, float windowH
 	}
 }
 
+int Scene::ChangeScene()
+{
+	if (swap == true) 
+	{
+		return sceneSwap;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+void Scene::SetSceneChange(bool next, int newScene)
+{
+	swap = next;
+	sceneSwap = newScene;
+}
+
+int Scene::GetNewScene()
+{
+	return sceneSwap;
+}
+
+void Scene::SetSwap(bool sceneSwap)
+{
+	swap = sceneSwap;
+}
+
 entt::registry* Scene::GetScene() const
 {
 	return m_sceneReg;

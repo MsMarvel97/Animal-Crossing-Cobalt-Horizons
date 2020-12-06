@@ -125,3 +125,12 @@ bool DialogueClass::GetInstrumentThree()
 {
 	return m_instrumentThree;
 }
+
+void DialogueClass::SetCafe(bool check)
+{
+	m_cafe = check;
+}
+bool DialogueClass::GetCafe()
+{
+	return m_cafe;
+}

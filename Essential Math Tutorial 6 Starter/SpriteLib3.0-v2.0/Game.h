@@ -46,6 +46,8 @@ public:
 	//*Checks the results of the events that have been polled
 	void CheckEvents();
 
+	void NewScene();
+
 	/*Input Functions*/
 	void AcceptInput();
 	void GamepadInput();

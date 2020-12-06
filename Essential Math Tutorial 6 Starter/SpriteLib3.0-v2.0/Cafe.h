@@ -18,7 +18,10 @@ public:
 	//void KeyboardUp() override;
 	void CurrentTime();
 	bool done = false;
+	void UpdateSprites();
+	std::string TimerStrings(std::string digit);
 
+	void UpdatePoints();
 	//booleans for cups
 	bool sC = true;
 	bool mC = false;
@@ -45,13 +48,16 @@ public:
 	int custOrder[4] = { 1,1,1,1 };
 	//array to hold current beverage selections using integers
 	int beverage[4] = { 1,1,1,1 }; 
-	//arrat to hold blend name images
+	//array to hold blend name images
 	std::string blendNames[3] = { "bluemountain.png", "kilimanjaro.png", "mocha.png" };
 	std::string milkNames[4] = { "none.png", "alittle.png", "regular.png", "lots.png" };
 	std::string sugarNames[4] = { "none.png", "onespoon.png", "twospoons.png", "threespoons.png" };
 	std::string cupNames[3] = { "small.png", "medium.png", "large.png" };
 
-	
+	//array to hold file name of numbers
+	//std::string points [20] = {'digit'}
+	std::string digitName = "Digit";
+	std::string pngName = ".png";
 
 	bool gameOver = false;
 	int timesUpSign;
@@ -95,4 +101,21 @@ protected:
 	int milkOrder;
 	int sugarOrder;
 	int cupOrder;
+
+	//variables for timer
+	int timerMinutes;
+	int timerSecondsTens;
+	int timerSecondsOnes;
+	int timerFrames = 0;
+	int minutesCount = 1;
+	int tensCount = 3;
+	int onesCount = 0;
+	bool tens = false;
+	bool minutes = false;
+
+	//variables for points
+	int pointTens;//sprite
+	int pointOnes;//sprite
+	int ten = 0;
+	int one = 0;
 };
