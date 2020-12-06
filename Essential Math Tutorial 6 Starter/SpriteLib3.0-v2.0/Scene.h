@@ -42,6 +42,10 @@ public:
 	virtual void KeyboardHold() { };
 	virtual void KeyboardDown() { };
 	virtual void KeyboardUp() { };
+	int ChangeScene();
+	void SetSceneChange(bool next, int newScene);
+	int GetNewScene();
+	void SetSwap(bool sceneSwap);
 
 	//checks conditions for scene change
 	int ChangeScene();

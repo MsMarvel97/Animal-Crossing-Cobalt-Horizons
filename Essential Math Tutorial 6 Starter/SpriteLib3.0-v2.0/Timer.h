@@ -1,4 +1,4 @@
-#ifndef __TIMER_H__
+ #ifndef __TIMER_H__
 #define __TIMER_H__
 
 #include <ctime>
@@ -17,11 +17,8 @@ public:
 	static void Reset();
 	//Updates the clock using ctime
 	static void Update();
-
-	static float StopWatch(float startTime) {
-		float swNow = Timer::time - startTime;
-		return swNow;
-	}
+	//stopwatch for tracking time elapsed since a specific moment
+	static float StopWatch(float startTime);
 };
 
 #endif // !__TIMER_H__

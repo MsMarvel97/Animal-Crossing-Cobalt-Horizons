@@ -36,6 +36,10 @@ public:
 	std::vector<int> GetTargetEntities();
 	b2Vec2 movement = (b2Vec2(0.f, 0.f));
 
+	void SetFlag(int setTrue);
+
+	void SetDiaNum(int setTrue);//used for dialogue trigger
+
 
 protected:
 	int m_targetTrigger = 0;
@@ -50,5 +54,8 @@ protected:
 	std::vector<PhysicsBody> m_bodies;
 	std::vector<int> m_targetX;
 	std::vector<int> m_targetY;
+	bool check = false;
+	int flag = 0;
+	int diaNum = 0;//used for dialogue trigger
 };
 

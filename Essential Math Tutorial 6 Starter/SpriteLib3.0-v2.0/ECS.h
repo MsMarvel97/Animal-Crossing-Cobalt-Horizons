@@ -21,11 +21,15 @@
 #include "CollisionFlag.h"
 #include "SmallTrigger.h"
 #include "PosCheck.h"
+#include "CollisionFlagClass.h"
+#include "CupChangeTrigger.h"
+#include "TestTrigger.h"
+#include "DialogueTrigger.h"
+#include "DialogueClass.h"
 #include "PlayerPoints.h"
 #include "PeachTrigger.h"
 #include "CoconutTrigger.h"
 #include "Kinematics.h"
-
 
 
 class ECS abstract

@@ -25,6 +25,6 @@ void MainEntities::MainPlayer(int main)
 
 void MainEntities::ResetEntities()
 {
-	m_mainPlayer = 0;
+	m_mainPlayer = 0;//resets to default state
 	m_mainCamera = 0;
 }

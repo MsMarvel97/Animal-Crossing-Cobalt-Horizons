@@ -28,3 +28,9 @@ void Timer::Update()
 	//Adds delta time to the total time passed (since last reset)
 	time += deltaTime;
 }
+
+float Timer::StopWatch(float startTime)
+{
+	float swNow = Timer::time - startTime;
+	return swNow;
+}

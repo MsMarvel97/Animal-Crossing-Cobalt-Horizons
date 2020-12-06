@@ -210,10 +210,22 @@
     <ClInclude Include="PlayerCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Checker.h">
+    <ClInclude Include="CollisionFlagClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FruitGame.h">
+    <ClInclude Include="CupChangeTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogueClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogueTrigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RecheckConditions.h">
@@ -422,10 +434,22 @@
     <ClCompile Include="PlayerCheck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Checker.cpp">
+    <ClCompile Include="CollisionFlagClass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FruitGame.cpp">
+    <ClCompile Include="CupChangeTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogueClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogueTrigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RecheckConditions.cpp">

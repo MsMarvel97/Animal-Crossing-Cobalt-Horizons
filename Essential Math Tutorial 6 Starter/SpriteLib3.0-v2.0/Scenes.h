@@ -7,6 +7,6 @@
 #include "AnimationSpritePlayground.h"
 #include "Cafe.h"
 #include "AnimationDemo.h"
-#include "FruitGame.h"
+#include "GameWorld.h"
 
 #endif // !__SCENES_H__
