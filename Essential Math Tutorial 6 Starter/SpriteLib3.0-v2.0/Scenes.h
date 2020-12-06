@@ -6,6 +6,7 @@
 #include "PhysicsPlayground.h"
 #include "AnimationSpritePlayground.h"
 #include "Cafe.h"
+#include "FruitGame.h"
 #include "AnimationDemo.h"
 #include "GameWorld.h"
 

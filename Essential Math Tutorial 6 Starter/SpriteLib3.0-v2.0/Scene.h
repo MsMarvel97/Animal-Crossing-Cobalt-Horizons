@@ -42,13 +42,13 @@ public:
 	virtual void KeyboardHold() { };
 	virtual void KeyboardDown() { };
 	virtual void KeyboardUp() { };
+	//checks conditions for scene change
 	int ChangeScene();
 	void SetSceneChange(bool next, int newScene);
 	int GetNewScene();
 	void SetSwap(bool sceneSwap);
 
-	//checks conditions for scene change
-	int ChangeScene();
+
 
 	//Mouse Input
 	//Because these are virtual you can override them in your inherited classes.
@@ -61,11 +61,6 @@ public:
 	entt::registry* GetScene() const;
 	//Set the scene registry
 	void SetScene(entt::registry& scene);
-
-	//controls bool which implicates scene change
-	void SceneChange(bool next, int newScene);
-
-	int GetNewScene();
 
 	//Gets the background color of the scene
 	vec4 GetClearColor() const;

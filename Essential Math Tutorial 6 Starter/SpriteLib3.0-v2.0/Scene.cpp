@@ -164,17 +164,6 @@ void Scene::SetScene(entt::registry& scene)
 	m_sceneReg = &scene;
 }
 
-void Scene::SceneChange(bool next, int newScene)
-{
-	swap = next;
-	sceneSwap = newScene;
-}
-
-int Scene::GetNewScene()
-{
-	return sceneSwap;
-}
-
 vec4 Scene::GetClearColor() const
 {
 	return m_clearColor;

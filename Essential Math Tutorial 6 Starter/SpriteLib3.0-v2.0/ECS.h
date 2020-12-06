@@ -15,7 +15,6 @@
 #include "ResizeTrigger.h"
 #include "RotationTrigger.h"
 #include "RecheckConditions.h"
-#include "Checker.h"
 #include "HorizontalScroll.h"
 #include "CanJump.h"
 #include "CollisionFlag.h"

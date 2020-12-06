@@ -20,6 +20,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 	//Dynamically allocates the register
 	m_sceneReg = new entt::registry;
 	m_physicsWorld = new b2World(m_gravity);
+	m_physicsWorld->SetContactListener(&listener);
 
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
@@ -79,7 +80,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Transform>(entity);
 
 		//Set up the components
-		std::string fileName = "tree.png";
+		std::string fileName = "treeBackground.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 150, 160);
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -5.f, 0.f));
@@ -96,7 +97,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Transform>(entity);
 
 		//Set up the components
-		std::string fileName = "tree.png";
+		std::string fileName = "treeBackground.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 150, 160);
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-150.f, -5.f, 0.f));
@@ -112,7 +113,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Transform>(entity);
 
 		//Set up the components
-		std::string fileName = "tree.png";
+		std::string fileName = "treeBackground.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 150, 160);
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(150.f, -5.f, 0.f));
@@ -422,7 +423,7 @@ void FruitGame::KeyboardDown()
 	}
 	if (Input::GetKeyDown(Key::R))
 	{
-		Scene::SceneChange(true, 3);
+		Scene::SetSceneChange(true, 3);
 	}
 
 }
@@ -500,8 +501,10 @@ void FruitGame::NewFruits()
 			else
 			{
 				auto entity = ECS::CreateEntity();
-				//float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
-				float randomXVal = rand() % 220 - 115;
+				auto randomSeed = std::default_random_engine(std::random_device{}());
+				std::uniform_real_distribution range{ -115.f, 115.f };
+				//float randomXVal = rand() % 220 - 115;
+				float randomXVal = range(randomSeed);
 
 				//Add components
 				ECS::AttachComponent<Sprite>(entity);
