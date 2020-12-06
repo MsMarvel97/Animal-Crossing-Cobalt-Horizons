@@ -42,6 +42,7 @@ protected:
 	int stunTracker = 0;
 	int player = 0;
 	int stunIcon = 0;
+	int bonk = 0;
 
 	int pointsTens = 0;
 	int pointsOnes = 0;

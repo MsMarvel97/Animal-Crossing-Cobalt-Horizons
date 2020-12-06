@@ -227,14 +227,32 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Transform>(entity);
 		ECS::AttachComponent<Kinematics>(entity);
 
-		std::string fileName = "boxSprite.jpg";
+		std::string fileName = "stun.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 15, 15);
 		ECS::GetComponent<Kinematics>(entity).SetChild(entity);
 		ECS::GetComponent<Kinematics>(entity).SetParent(player);
-		ECS::GetComponent<Kinematics>(entity).SetOffset(20.f, 20.f);
+		ECS::GetComponent<Kinematics>(entity).SetOffset(0.f, 5.f);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f + 30, -50 + 30, 50.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 
 	}
+
+	//Bonk Icon
+	{
+		auto entity = ECS::CreateEntity();
+		bonk = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Kinematics>(entity);
+
+		std::string fileName = "bonk.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 50, 50);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 40.f, 50.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+	}
+
 
 	//Minutes
 	{
@@ -246,7 +264,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit1.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(91.f, 50.f, 50.f));
 	}
 
 	//Colon
@@ -258,7 +276,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Colon.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 3, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(56.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(99.f, 50.f, 50.f));
 	}
 
 	//Seconds (10s)
@@ -271,7 +289,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit3.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(62.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(107.f, 50.f, 50.f));
 	}
 
 	//Seconds (1s)
@@ -284,7 +302,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(68.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(115.f, 50.f, 50.f));
 	}
 
 	////Points (10s)
@@ -310,7 +328,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(62.f, 60.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(91.f, 65.f, 50.f));
 
 	}
 
@@ -324,7 +342,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(68.f, 60.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(99.f, 65.f, 50.f));
 	}
 
 	//Setup MainCamera Entity
@@ -438,15 +456,21 @@ void FruitGame::NewFruits()
 {
 	float currentTime = Timer::StopWatch(timer);
 	auto& points = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
+	auto& stun = ECS::GetComponent<Sprite>(stunIcon);
+	auto& sign = ECS::GetComponent<Sprite>(bonk);
 
 	if (points.GetStun() == true)
 	{
 		stunTracker++;
+		stun.SetTransparency(1.f);
+		sign.SetTransparency(1.f);
 	}
 
 	if (stunTracker == 180)
 	{
 		points.SetStun(false);
+		stun.SetTransparency(0.f);
+		sign.SetTransparency(0.f);
 		stunTracker = 0;
 	}
 
