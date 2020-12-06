@@ -22,3 +22,9 @@ void MainEntities::MainPlayer(int main)
 {
 	m_mainPlayer = main;
 }
+
+void MainEntities::ResetEntities()
+{
+	m_mainPlayer = 0;
+	m_mainCamera = 0;
+}

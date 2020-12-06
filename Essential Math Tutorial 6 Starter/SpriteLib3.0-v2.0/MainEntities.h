@@ -12,6 +12,8 @@ public:
 	static void MainCamera(int main);
 	static void MainPlayer(int main);
 
+	static void ResetEntities();
+
 private:
 	static int m_mainCamera;
 	static int m_mainPlayer;

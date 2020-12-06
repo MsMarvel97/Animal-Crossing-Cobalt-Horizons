@@ -1,5 +1,7 @@
 #include "FruitGame.h"
 #include "Utilities.h"
+#include "Game.h"
+#include "Scene.h"
 #include <iostream>
 #include <random>
 
@@ -361,6 +363,7 @@ void FruitGame::KeyboardDown()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
+	auto* scene = new Game*();
 
 	if (Input::GetKeyDown(Key::T))
 	{
@@ -376,7 +379,7 @@ void FruitGame::KeyboardDown()
 	}
 	if (Input::GetKeyDown(Key::R))
 	{
-		Scene::SetScene(m_sceneReg[3]);
+		scene->NewScene(3);
 	}
 		
 }

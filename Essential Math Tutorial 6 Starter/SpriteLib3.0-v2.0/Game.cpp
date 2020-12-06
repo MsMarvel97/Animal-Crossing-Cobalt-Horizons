@@ -44,7 +44,7 @@ void Game::InitGame()
 	 
 	//Sets active scene reference to our scene
 	m_activeScene = m_scenes[5];
-
+	
 	m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
 
 	//Sets m_register to point to the register in the active scene
@@ -101,8 +101,8 @@ void Game::Update()
 	if (1000.f / 120.f > frameTicks)
 	{
 		SDL_Delay(1000.f / 120.f - frameTicks);
-
 	}
+
 	//Update the backend
 	BackEnd::Update(m_register);
 
@@ -142,6 +142,20 @@ void Game::CheckEvents()
 
 	if (m_wheel)
 		MouseWheel(BackEnd::GetWheelEvent());
+}
+
+void Game::NewScene(int sceneNumber)
+{
+	m_activeScene->Unload();
+
+	MainEntities::ResetEntities();
+
+	m_activeScene = m_scenes[sceneNumber];
+	m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
+	m_register = m_activeScene->GetScene();
+
+	BackEnd::SetWindowName(m_activeScene->GetName());
+	PhysicsSystem::Init();
 }
 
 void Game::AcceptInput()

@@ -52,6 +52,7 @@ void Scene::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Camera>(entity).SetOrthoSize(temp);
 		ECS::GetComponent<Camera>(entity).SetWindowSize(vec2(float(windowWidth), float(windowHeight)));
 		ECS::GetComponent<Camera>(entity).Orthographic(aspectRatio, temp.x, temp.y, temp.z, temp.w, -100.f, 100.f);
+		m_physicsWorld = new b2World(m_gravity);
 	}
 
 	//Setup new Entity
@@ -122,6 +123,18 @@ void Scene::CreateCameraEntity(bool mainCamera, float windowWidth, float windowH
 		{
 			ECS::GetComponent<VerticalScroll>(entity).SetCam(&ECS::GetComponent<Camera>(entity));
 		}
+	}
+}
+
+int Scene::ChangeScene(int newScene, bool swap)
+{
+	if (newScene >= 0)
+	{
+		return newScene;
+	}
+	else
+	{
+		return -1;
 	}
 }
 

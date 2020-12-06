@@ -39,6 +39,7 @@ public:
 	virtual void KeyboardHold() { };
 	virtual void KeyboardDown() { };
 	virtual void KeyboardUp() { };
+	int ChangeScene(int newScene);
 
 	//Mouse Input
 	//Because these are virtual you can override them in your inherited classes.

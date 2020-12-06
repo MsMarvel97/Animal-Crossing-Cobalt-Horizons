@@ -46,6 +46,8 @@ public:
 	//*Checks the results of the events that have been polled
 	void CheckEvents();
 
+	void NewScene(int sceneNumber);
+
 	/*Input Functions*/
 	void AcceptInput();
 	void GamepadInput();
@@ -63,6 +65,7 @@ public:
 	void MouseMotion(SDL_MouseMotionEvent evnt);
 	void MouseClick(SDL_MouseButtonEvent evnt);
 	void MouseWheel(SDL_MouseWheelEvent evnt);
+
 private:
 	//The window
 	Window *m_window = nullptr;
@@ -73,7 +76,7 @@ private:
 	//Scenes
 	Scene* m_activeScene = nullptr;
 	std::vector<Scene*> m_scenes;
-	
+
 	//Imgui stuff
 	bool m_guiActive = false;
 
