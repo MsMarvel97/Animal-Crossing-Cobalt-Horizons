@@ -2,6 +2,8 @@
 #include "Utilities.h"
 #include "Timer.h"
 #include <random>
+#include "Cafe.h"
+#include "FruitGame.h"
 
 //gravity
 GameWorld::GameWorld(std::string name)
@@ -19,12 +21,13 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 	m_sceneReg = new entt::registry;
 	m_physicsWorld = new b2World(m_gravity);
 	m_physicsWorld->SetContactListener(&listener);
+
 	SetSceneChange(false, -1);
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
 
 	SDL_Init(SDL_INIT_AUDIO);
-	SDL_LoadWAV("fruitGame.wav", &wavSpec, &wavBuffer, &wavLength);
+	SDL_LoadWAV("overworldBGM.wav", &wavSpec, &wavBuffer, &wavLength);
 
 	deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
@@ -72,6 +75,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<CanJump>(entity);
 		ECS::AttachComponent<CollisionFlagClass>(entity);
 		ECS::AttachComponent<DialogueClass>(entity);
+		ECS::AttachComponent<EndConditions>(entity);
 
 		//Set up components
 		std::string fileName = "spritesheets/overworldSpritesheet.png";
@@ -284,6 +288,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		treeX += 100;
 	}
 	treeY -= 80;
+
 	for (int i = 0; i < 5; i++)
 	{
 		{
@@ -301,6 +306,8 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		}
 		treeY -= 80;
 	}
+	treeX = -180.f;
+	treeY = -50.f;
 
 	//Setup Docks
 	{
@@ -310,28 +317,11 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Add components
 		ECS::AttachComponent<Sprite>(entity);
 		ECS::AttachComponent<Transform>(entity);
-		//ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
 		std::string fileName = "dock.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512/6, 512/6);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(150.f, -120.f, 3.f));
-
-	/*	auto& tempSpr = ECS::GetComponent<Sprite>(entity);
-		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
-
-		float shrinkX = 0.f;
-		float shrinkY = 0.f;
-		b2Body* tempBody;
-		b2BodyDef tempDef;
-		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(300.f), float32(0.f));
-
-		tempBody = m_physicsWorld->CreateBody(&tempDef);
-
-		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX),
-			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
-		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));*/
 	}
 
 	//Setup Boat
@@ -381,6 +371,41 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
+	//Setup Mithunan Start Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		mStart = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "MStart.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(205.f, 35.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+
+	//Setup Mithunan End Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		mEnd = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "MFinish.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(205.f, 35.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+
+
 	//Setup Kainat
 	{
 		//Creates entity
@@ -412,6 +437,39 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
+	//Setup Kainat Start Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		kaStart = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "KStart.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-5.f, 15.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+	//Setup Kainat End Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		kaEnd = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "KFinish.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-5.f, 15.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+
 
 	//Setup Stevie
 	{
@@ -443,6 +501,39 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX),
 			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+
+	//Setup Stevie Start Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		sStart = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "SStart.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(335.f, 45.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+	//Setup Stevie End Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		sEnd = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "SFinish.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(335.f, 45.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 	}
 
 	//Setup Kyra
@@ -477,6 +568,39 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
+	//Setup Kyra Start Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		kyStart = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "KyStart.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-10.f, 265.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+	//Setup Kyra End Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		kyEnd = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "KyFinish.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-10.f, 265.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+
 	//Setup Winston
 	{
 		//Creates entity
@@ -507,6 +631,39 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX),
 			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+
+	//Setup Winston Start Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		wStart = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "WStart.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(125.f, 285.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+	}
+	//Setup Winston End Dialogue
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		wEnd = entity;
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "WFinish.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 140, 120);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(125.f, 285.f, 100.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 	}
 
 	//Setup Orchard Office
@@ -748,6 +905,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "book.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		if (bookOneTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -785,6 +950,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "book.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		if (bookTwoTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -822,6 +995,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "book.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		if (bookThreeTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -859,6 +1040,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "roll.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 475 / 19, 420 / 19);
+		if (rollOneTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(120.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -896,6 +1085,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "roll.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 475 / 19, 420 / 19);
+		if (rollTwoTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(120.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -933,6 +1130,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "roll.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 475 / 19, 420 / 19);
+		if (rollThreeTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(120.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -970,6 +1175,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "record.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		if (instrumentOneTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -1007,6 +1220,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "drumSticks.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 475 / 18, 470 / 18);
+		if (instrumentTwoTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -1044,6 +1265,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "headphones.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 512 / 19, 384 / 19);
+		if (instrumentThreeTriggered == false)
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		}
+		else
+		{
+			ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+		}
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
 		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
 		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
@@ -1102,6 +1331,43 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
 		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
 		tempPhsBody.SetPosition(b2Vec2(50, 180));
+	}
+
+	//Setup Cafe Trigger
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "orchardMat.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 500 / 12, 300 / 12);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 50.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DialogueTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetDiaNum(15);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(30.f), float32(-30.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER | OBJECTS);
+		tempPhsBody.SetColor(vec4(1.f, 0.f, 0.f, 0.3f));
+		tempPhsBody.SetPosition(b2Vec2(40, -65));
 	}
 
 	//Setup Mithunan Trigger
@@ -1305,6 +1571,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 void GameWorld::Update()
 {
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
+	auto& winCon = ECS::GetComponent<EndConditions>(MainEntities::MainPlayer());
 	//Scene::AdjustScrollOffset();
 	player.Update();
 }
@@ -1357,6 +1624,20 @@ void GameWorld::KeyboardDown()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 	auto& talk = ECS::GetComponent<DialogueClass>(MainEntities::MainPlayer());
+	auto& winCon = ECS::GetComponent<EndConditions>(MainEntities::MainPlayer());
+	auto& mS = ECS::GetComponent<Sprite>(mStart);
+	auto& mF = ECS::GetComponent<Sprite>(mEnd);
+	auto& kaS = ECS::GetComponent<Sprite>(kaStart);
+	auto& kaF = ECS::GetComponent<Sprite>(kaEnd);
+	auto& kyS = ECS::GetComponent<Sprite>(kyStart);
+	auto& kyF = ECS::GetComponent<Sprite>(kyEnd);
+	auto& wS = ECS::GetComponent<Sprite>(wStart);
+	auto& wF = ECS::GetComponent<Sprite>(wEnd);
+	auto& sS = ECS::GetComponent<Sprite>(sStart);
+	auto& sF = ECS::GetComponent<Sprite>(sEnd);
+
+
+
 	if (Input::GetKeyDown(Key::T))
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
@@ -1366,10 +1647,14 @@ void GameWorld::KeyboardDown()
 	{
 		if (rollsFound == 3)
 		{
+			mS.SetTransparency(0.f);
+			mF.SetTransparency(1.f);
 			std::cout << "MOM GET THE CAMERA! Thanks for finding all my film rolls!\n";
+			SetFlag(true, 5);
 		}
 		else
 		{
+			mS.SetTransparency(1.f);
 			std::cout << "MOM GET THE CAMERA?! Can you find my three missing film rolls?\n";
 		}
 	}
@@ -1378,10 +1663,14 @@ void GameWorld::KeyboardDown()
 	{
 		if (booksFound == 3)
 		{
+			sS.SetTransparency(0.f);
+			sF.SetTransparency(1.f);
 			std::cout << "Yay! Thanks for finding all my library books!\n";
+			SetFlag(true, 3);
 		}
 		else
 		{
+			sS.SetTransparency(1.f);
 			std::cout << "Can you find my three missing library books?.\n";
 		}
 		
@@ -1391,22 +1680,28 @@ void GameWorld::KeyboardDown()
 	{
 		if (instrumentsFound == 3)
 		{
+			wS.SetTransparency(0.f);
+			wF.SetTransparency(1.f);
+			SetFlag(true, 4);
 			std::cout << "Ohhh, you found my stuff! Here's some tickets to the next Coachella Concert where I'll be performing.\n";
 		}
 		else
 		{
+			wS.SetTransparency(1.f);
 			std::cout << "My brother Winston The Second lost my music stuff. Can you find them please?.\n";
 		}
 	}
 
 	if (Input::GetKeyDown(Key::E) && talk.GetKainat() == true)
 	{
-		std::cout << "Can you catch 50 fruits in my Orchard?\n";
+		kaS.SetTransparency(1.f);
+		std::cout << "Can you catch 35 fruits in my Orchard?\n";
 	}
 
 	if (Input::GetKeyDown(Key::E) && talk.GetKyra() == true)
 	{
-		std::cout << "Can you serve 20 orders in my cafe?\n";
+		kyS.SetTransparency(1.f);
+		std::cout << "Can you serve 7 orders in my cafe?\n";
 	}
 
 	if (Input::GetKeyDown(Key::E) && talk.GetBookOne() == true && bookOneTriggered == false)
@@ -1486,7 +1781,28 @@ void GameWorld::KeyboardDown()
 
 	if (Input::GetKeyDown(Key::E) && talk.GetCafe() == true)
 	{
+		SDL_CloseAudioDevice(deviceID);
 		Scene::SetSceneChange(true, 3);		
+	}
+
+	if (Input::GetKeyDown(Key::E) && talk.GetOrchard() == true)
+	{
+		SDL_CloseAudioDevice(deviceID);
+		Scene::SetSceneChange(true, 4);
+	}
+	
+	if (Input::GetKeyDown(Key::R))
+	{
+		mS.SetTransparency(0.f);
+		mF.SetTransparency(0.f);
+		sS.SetTransparency(0.f);
+		sF.SetTransparency(0.f);
+		wS.SetTransparency(0.f);
+		wF.SetTransparency(0.f);
+		kaS.SetTransparency(0.f);
+		kaF.SetTransparency(0.f);
+		kyS.SetTransparency(0.f);
+		kyF.SetTransparency(0.f);
 	}
 }
 

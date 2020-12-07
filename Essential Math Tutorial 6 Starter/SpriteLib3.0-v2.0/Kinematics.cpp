@@ -13,7 +13,6 @@ void Kinematics::SetPosition()
 
 
 	ECS::GetComponent<Transform>(kinChild).SetPosition(vec3(parentX + offsetX, parentY + offsetY, childZ));
-	std::cout << ECS::GetComponent<Transform>(kinChild).GetPosition().x << "|" << ECS::GetComponent<Transform>(kinChild).GetPosition().y << "|" << ECS::GetComponent<Transform>(kinChild).GetPosition().z << std::endl;
 }
 
 void Kinematics::SetParent(int parent)

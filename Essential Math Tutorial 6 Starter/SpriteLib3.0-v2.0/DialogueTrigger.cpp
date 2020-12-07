@@ -51,8 +51,12 @@ void DialogueTrigger::OnEnter()
 	case(14):
 		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetCafe(true);
 		break;
+	case(15):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetOrchard(true);
+		break;
 	}
 }
+
 
 void DialogueTrigger::OnExit()
 {
@@ -103,6 +107,9 @@ void DialogueTrigger::OnExit()
 		break;
 	case(14):
 		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetCafe(false);
+		break;
+	case(15):
+		ECS::GetComponent<DialogueClass>(m_targetEntities[0]).SetOrchard(false);
 		break;
 	}
 }

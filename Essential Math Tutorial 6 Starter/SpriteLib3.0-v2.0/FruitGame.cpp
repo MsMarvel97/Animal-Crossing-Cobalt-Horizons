@@ -21,10 +21,14 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 	m_sceneReg = new entt::registry;
 	m_physicsWorld = new b2World(m_gravity);
 	m_physicsWorld->SetContactListener(&listener);
+	SetSceneChange(false, -1);
+	//Attach the register
+	ECS::AttachRegister(m_sceneReg);
+
 	timer = 0;
-	
+
 	SDL_Init(SDL_INIT_AUDIO);
-	
+
 
 
 	//Attach the register
@@ -46,6 +50,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 		ECS::AttachComponent<CanJump>(entity);
 		ECS::AttachComponent<PlayerPoints>(entity);
+		ECS::AttachComponent<EndConditions>(entity);
 		ECS::AttachComponent<AnimationController>(entity);
 
 		//Set up components
@@ -257,13 +262,29 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 	}
 
+	//Time's Up Screen
+	{
+		auto entity = ECS::CreateEntity();
+		timesUp = entity;
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "timeUp.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 80, 20);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 20.f, 50.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
+
+
+	}
+
 	//Timer Nameplate
 	{
 		auto entity = ECS::CreateEntity();
-		
+
 		ECS::AttachComponent<Sprite>(entity);
 		ECS::AttachComponent<Transform>(entity);
-		
+
 		std::string fileName = "timer.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 70, 20);
 		ECS::GetComponent<Transform>(entity).SetPosition(-87.f, 65.f, 1.f);
@@ -331,19 +352,6 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-59.f, 65.f, 50.f));
 	}
-
-	////Points (10s)
-	//{
-	//	auto entity = ECS::CreateEntity();
-	//	pointsTens = entity;
-
-	//	ECS::AttachComponent<Sprite>(entity);
-	//	ECS::AttachComponent<Transform>(entity);
-
-	//	std::string fileName = "Digit0.png";
-	//	ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-	//	ECS::GetComponent<Transform>(entity).SetPosition(vec3(62.f, 60.f, 50.f));
-	//}
 
 	//Points (10s)
 	{
@@ -463,9 +471,8 @@ void FruitGame::KeyboardDown()
 		if (timer == 0)
 		{
 			timer = Timer::time;
-		
 
-			SDL_LoadWAV("fruitGame.wav", &wavSpec, &wavBuffer, &wavLength);
+			SDL_LoadWAV("fruitgameBGM.wav", &wavSpec, &wavBuffer, &wavLength);
 
 			deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
@@ -473,10 +480,10 @@ void FruitGame::KeyboardDown()
 			SDL_PauseAudioDevice(deviceID, 0);
 		}
 	}
-	if (Input::GetKeyDown(Key::R))
+	if (Input::GetKeyDown(Key::Enter) && gameOver == true)
 	{
-
-		Scene::SetSceneChange(true, 3);
+		gameOver = false;
+		Scene::SetSceneChange(true, 6);
 	}
 
 }
@@ -491,8 +498,10 @@ void FruitGame::NewFruits()
 {
 	float currentTime = Timer::StopWatch(timer);
 	auto& points = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
+	auto& winCon = ECS::GetComponent<EndConditions>(MainEntities::MainPlayer());
 	auto& stun = ECS::GetComponent<Sprite>(stunIcon);
 	auto& sign = ECS::GetComponent<Sprite>(bonk);
+	auto& endGame = ECS::GetComponent<Sprite>(timesUp);
 
 	if (points.GetStun() == true)
 	{
@@ -553,7 +562,6 @@ void FruitGame::NewFruits()
 				tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), true, OBJECTS, PLAYER | TRIGGER, 0.3f);
 
 				tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
-				std::cout << "Stunned" << std::endl;
 				fruitCounter = 0;
 			}
 
@@ -595,7 +603,6 @@ void FruitGame::NewFruits()
 				tempPhsBody = PhysicsBody(entity, tempBody, float((tempSpr.GetWidth() - shrinkY) / 2.f), vec2(0.f, 0.f), true, OBJECTS, PLAYER | TRIGGER, 0.3f);
 
 				tempPhsBody.SetColor(vec4(1.f, 0.f, 1.f, 0.3f));
-				std::cout << "Peach Points:" << ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer()).GetPeachPoints() << std::endl;
 			}
 
 			fruitCounter++;
@@ -612,6 +619,16 @@ void FruitGame::NewFruits()
 			frames = 0;
 		}
 	}
+	if (timer != 0 && currentTime > 91.f)
+	{
+		if (points.GetPeachPoints() >= 35)
+		{
+			SetFlag(true, 2);
+		}
+		endGame.SetTransparency(1.f);
+		gameOver = true;
+	}
+
 }
 
 void FruitGame::UpdateSprites()
@@ -627,11 +644,11 @@ void FruitGame::UpdateSprites()
 	static int counter = 0;
 
 	//checks if timer has started and if it hasn't or if game is over, returns the function without doing anything
-	if (timer == 0 || currentTime > 90){return;}
+	if (timer == 0 || currentTime > 91) { return; }
 
 	//increasing remainder by delta time
 	remainder += Timer::deltaTime;
-	
+
 	//checking if remainder is greater than or equal to the time of a frame
 	while (remainder >= timing)
 	{

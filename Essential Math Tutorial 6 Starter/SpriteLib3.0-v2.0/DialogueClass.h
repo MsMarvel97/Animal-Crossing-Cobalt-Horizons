@@ -51,6 +51,10 @@ public:
 	void SetCafe(bool check);//setter
 	bool GetCafe();//getter
 
+	//Orchard
+	void SetOrchard(bool check);//setter
+	bool GetOrchard();//getter
+
 protected:
 	bool m_kainat = false;
 	bool m_kyra = false;
@@ -67,7 +71,7 @@ protected:
 	bool m_instrumentTwo = false;
 	bool m_instrumentThree = false;
 	bool m_cafe = false;
-
+	bool m_orchard = false;
 	//int m_bookCount = 0;
 
 };

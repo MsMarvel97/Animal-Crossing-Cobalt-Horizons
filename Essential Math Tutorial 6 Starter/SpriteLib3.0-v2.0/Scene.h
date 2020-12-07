@@ -48,6 +48,12 @@ public:
 	int GetNewScene();
 	void SetSwap(bool sceneSwap);
 
+	//sets the completed quest info
+	void SetFlag(bool flag, int quest);
+	//flags quest completion for game loop
+	int QuestComplete();
+
+
 
 
 	//Mouse Input
@@ -86,6 +92,9 @@ protected:
 
 	bool swap = false;
 	int sceneSwap = 0;
+
+	bool questFlag = false;
+	int questID = 0;
 
 	vec4 m_clearColor = vec4(0.15f, 0.33f, 0.58f, 1.f);
 

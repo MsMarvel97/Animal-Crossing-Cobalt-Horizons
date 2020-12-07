@@ -43,6 +43,8 @@ protected:
 	int player = 0;
 	int stunIcon = 0;
 	int bonk = 0;
+	int timesUp = 0;
+	bool gameOver = false;
 
 	int pointsTens = 0;
 	int pointsOnes = 0;
@@ -53,6 +55,7 @@ protected:
 	int timerMinutes = 0;
 	int timerSecondsTens = 0;
 	int timerSecondsOnes = 0;
+
 
 	bool tens = false;
 	bool minutes = false;

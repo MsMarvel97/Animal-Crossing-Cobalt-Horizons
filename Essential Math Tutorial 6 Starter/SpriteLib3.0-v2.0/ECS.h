@@ -29,6 +29,7 @@
 #include "PeachTrigger.h"
 #include "CoconutTrigger.h"
 #include "Kinematics.h"
+#include "EndConditions.h"
 
 
 class ECS abstract

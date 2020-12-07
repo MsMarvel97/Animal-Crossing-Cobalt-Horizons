@@ -34,7 +34,12 @@ public:
 	bool instrumentTwoTriggered = false;
 	bool instrumentThreeTriggered = false;
 
-	
+	SDL_AudioSpec wavSpec;
+	Uint32 wavLength;
+	Uint8* wavBuffer;
+
+	SDL_AudioDeviceID deviceID;
+
 protected:
 	PhysicsPlaygroundListener listener;
 	int player;
@@ -48,11 +53,15 @@ protected:
 	int instrumentTwo;
 	int instrumentThree;
 
-
-	SDL_AudioSpec wavSpec;
-	Uint32 wavLength;
-	Uint8* wavBuffer;
-
-	SDL_AudioDeviceID deviceID;
+	int mStart = 0;
+	int mEnd = 0;
+	int kyStart = 0;
+	int kyEnd = 0;
+	int kaStart = 0;
+	int kaEnd = 0;
+	int wStart = 0;
+	int wEnd = 0;
+	int sStart = 0;
+	int sEnd = 0;
 };
 

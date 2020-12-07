@@ -76,7 +76,7 @@ void Scene::InitScene(float windowWidth, float windowHeight)
 void Scene::Update()
 {
 	auto& tempSpr = m_sceneReg->get<Sprite>(m_helloWorldSign);
-	
+
 	tempSpr.SetTransparency((0.5 * sin(Timer::time * 3.f)) + 0.5f);
 }
 
@@ -91,8 +91,8 @@ void Scene::AdjustScrollOffset()
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetOffset(maxSizeY - playerHalfSize);
 }
 
-void Scene::CreateCameraEntity(bool mainCamera, float windowWidth, float windowHeight, float left, float right, float bottom, float top, 
-									float zNear, float zFar, float aspectRatio, bool vertScroll, bool horizScroll)
+void Scene::CreateCameraEntity(bool mainCamera, float windowWidth, float windowHeight, float left, float right, float bottom, float top,
+	float zNear, float zFar, float aspectRatio, bool vertScroll, bool horizScroll)
 {
 	//Setup main camera
 	{
@@ -128,7 +128,7 @@ void Scene::CreateCameraEntity(bool mainCamera, float windowWidth, float windowH
 
 int Scene::ChangeScene()
 {
-	if (swap == true) 
+	if (swap == true)
 	{
 		return sceneSwap;
 	}
@@ -152,6 +152,24 @@ int Scene::GetNewScene()
 void Scene::SetSwap(bool sceneSwap)
 {
 	swap = sceneSwap;
+}
+
+void Scene::SetFlag(bool flag, int quest)
+{
+	questFlag = flag;
+	questID = quest;
+}
+
+int Scene::QuestComplete()
+{
+	if (questFlag == true)
+	{
+		return questID;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 entt::registry* Scene::GetScene() const
@@ -194,7 +212,7 @@ void Scene::SetGravity(b2Vec2 grav)
 	m_gravity = grav;
 }
 
-b2World & Scene::GetPhysicsWorld()
+b2World& Scene::GetPhysicsWorld()
 {
 	return *m_physicsWorld;
 }
@@ -203,9 +221,9 @@ void Scene::SetWindowSize(float windowWidth, float windowHeight)
 {
 	//TODO: Find new way to get the main camera
 	auto& tempCam = m_sceneReg->get<Camera>(MainEntities::MainCamera());
-	
+
 	tempCam.SetWindowSize(vec2(windowWidth, windowHeight));
 	tempCam.Orthographic(float(windowWidth / windowHeight), tempCam.GetOrthoSize().x, tempCam.GetOrthoSize().y,
-															tempCam.GetOrthoSize().z, tempCam.GetOrthoSize().w,
-															tempCam.GetNear(), tempCam.GetFar());
+		tempCam.GetOrthoSize().z, tempCam.GetOrthoSize().w,
+		tempCam.GetNear(), tempCam.GetFar());
 }

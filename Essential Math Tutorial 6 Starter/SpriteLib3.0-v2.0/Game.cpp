@@ -35,17 +35,17 @@ void Game::InitGame()
 
 	//Creates a new scene.
 	//Replace this with your own scene.
-	m_scenes.push_back(new FirstCreation("FIRST SCENE!!!!"));
-	m_scenes.push_back(new PhysicsPlayground("PHYSICS PLAYGROUND TIEM!!!"));
-	m_scenes.push_back(new AnimationSpritePlayground("Animation TIEM!!!!"));
-	m_scenes.push_back(new Cafe("Cafe Mini-game!!!"));
+	m_scenes.push_back(new StartMenu("Welcome to Animal Crossing: Cobalt Horizons"));
+	m_scenes.push_back(new HelpMenu("Animal Crossing: Cobalt Horizons Help Menu"));
+	m_scenes.push_back(new EndScreen("Thanks for playing Animal Crossing: Cobalt Horizons!"));
+	m_scenes.push_back(new Cafe("Cafe Chaos"));
 	m_scenes.push_back(new FruitGame("Fruit Shakedown"));
 	m_scenes.push_back(new AnimationDemo("Animation Demo"));
-	m_scenes.push_back(new GameWorld("Game World"));
+	m_scenes.push_back(new GameWorld("Cobalt Island"));
 
-	 
+
 	//Sets active scene reference to our scene
-	m_activeScene = m_scenes[6];
+	m_activeScene = m_scenes[0];
 
 	m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
 
@@ -99,7 +99,7 @@ void Game::Update()
 	float startTicks = SDL_GetTicks();
 
 	float frameTicks = SDL_GetTicks() - startTicks;
-	
+
 	if (1000.f / 120.f > frameTicks)
 	{
 		SDL_Delay(1000.f / 120.f - frameTicks);
@@ -114,7 +114,7 @@ void Game::Update()
 	m_activeScene->Update();
 
 	NewScene();
-	NewScene();
+	CheckWinConFlags();
 }
 
 void Game::GUI()
@@ -164,7 +164,62 @@ void Game::NewScene()
 		BackEnd::SetWindowName(m_activeScene->GetName());
 		PhysicsSystem::Init();
 	}
+
+	if (kyra == true && kainat == true && mithunan == true && winston == true && stevie == true && gameOver == false)
+	{
+		m_activeScene->Unload();
+
+		MainEntities::ResetEntities();
+
+		m_activeScene = m_scenes[2];
+		m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
+
+		m_register = m_activeScene->GetScene();
+
+		BackEnd::SetWindowName(m_activeScene->GetName());
+		PhysicsSystem::Init();
+		gameOver = true;
+	}
+
 }
+
+void Game::CheckWinConFlags()
+{
+	if (m_activeScene->QuestComplete() != -1)
+	{
+		int quest = m_activeScene->QuestComplete();
+		switch (quest)
+		{
+		case (1):
+			kyra = true;
+			std::cout << "Kyra Flag" << std::endl;
+			break;
+		case (2):
+			kainat = true;
+			std::cout << "Kainat Flag" << std::endl;
+			break;
+		case(3):
+			stevie = true;
+			std::cout << "Stevie Flag" << std::endl;
+			break;
+		case(4):
+			winston = true;
+			std::cout << "Winston Flag" << std::endl;
+			break;
+		case(5):
+			mithunan = true;
+			std::cout << "Mithunan Flag" << std::endl;
+			break;
+		}
+		m_activeScene->SetFlag(false, -1);
+
+	}
+}
+
+//void Game::WinCon()
+//{
+//
+//}
 
 void Game::AcceptInput()
 {
@@ -203,35 +258,35 @@ void Game::GamepadInput()
 	}
 }
 
-void Game::GamepadStroke(XInputController * con)
+void Game::GamepadStroke(XInputController* con)
 {
 	//Active scene now captures this input and can use it
 	//Look at base Scene class for more info.
 	m_activeScene->GamepadStroke(con);
 }
 
-void Game::GamepadUp(XInputController * con)
+void Game::GamepadUp(XInputController* con)
 {
 	//Active scene now captures this input and can use it
 	//Look at base Scene class for more info.
 	m_activeScene->GamepadUp(con);
 }
 
-void Game::GamepadDown(XInputController * con)
+void Game::GamepadDown(XInputController* con)
 {
 	//Active scene now captures this input and can use it
 	//Look at base Scene class for more info.
 	m_activeScene->GamepadDown(con);
 }
 
-void Game::GamepadStick(XInputController * con)
+void Game::GamepadStick(XInputController* con)
 {
 	//Active scene now captures this input and can use it
 	//Look at base Scene class for more info.
 	m_activeScene->GamepadStick(con);
 }
 
-void Game::GamepadTrigger(XInputController * con)
+void Game::GamepadTrigger(XInputController* con)
 {
 	//Active scene now captures this input and can use it
 	//Look at base Scene class for more info.

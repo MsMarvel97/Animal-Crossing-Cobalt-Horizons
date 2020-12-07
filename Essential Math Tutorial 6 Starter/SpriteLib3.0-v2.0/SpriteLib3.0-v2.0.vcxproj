@@ -156,6 +156,8 @@
     <ClInclude Include="DialogueTrigger.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="EndConditions.h" />
+    <ClInclude Include="EndScreen.h" />
     <ClInclude Include="FirstCreation.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="FruitGame.h" />
@@ -163,6 +165,7 @@
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="GrainEffect.h" />
     <ClInclude Include="GreyscaleEffect.h" />
+    <ClInclude Include="HelpMenu.h" />
     <ClInclude Include="HorizontalScroll.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
     <ClInclude Include="include\imgui\imgui.h" />
@@ -199,6 +202,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SmallTrigger.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="StartMenu.h" />
     <ClInclude Include="TestTrigger.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
@@ -236,6 +240,8 @@
     <ClCompile Include="DialogueTrigger.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="EndConditions.cpp" />
+    <ClCompile Include="EndScreen.cpp" />
     <ClCompile Include="FirstCreation.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="FruitGame.cpp" />
@@ -243,6 +249,7 @@
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="GrainEffect.cpp" />
     <ClCompile Include="GreyscaleEffect.cpp" />
+    <ClCompile Include="HelpMenu.cpp" />
     <ClCompile Include="HorizontalScroll.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
     <ClCompile Include="include\imgui\imgui_demo.cpp" />
@@ -255,6 +262,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainEntities.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="MinigameQuestFlags.cpp" />
     <ClCompile Include="PeachTrigger.cpp" />
     <ClCompile Include="PhysicsBody.cpp" />
     <ClCompile Include="PhysicsPlayground.cpp" />
@@ -277,6 +285,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SmallTrigger.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StartMenu.cpp" />
     <ClCompile Include="TestTrigger.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />

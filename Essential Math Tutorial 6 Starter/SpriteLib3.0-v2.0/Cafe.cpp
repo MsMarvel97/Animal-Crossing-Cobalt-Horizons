@@ -66,6 +66,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 		ECS::AttachComponent<CanJump>(entity);
 		ECS::AttachComponent<CollisionFlagClass>(entity);
+		ECS::AttachComponent<EndConditions>(entity);
 
 		//Set up components
 		std::string fileName = "spritesheets/barista.png";
@@ -121,7 +122,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		//Sets up components
 		std::string fileName = "floor.png";
-		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 838 / 3.5, 671 / 3.5);
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 838 / 3, 671 / 3);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 15.f, 0.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 	}
@@ -252,6 +253,35 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX),
 			float(tempSpr.GetHeight() / 4 - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+	//left wall segment
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "wallSegment.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 165 / 5.5, 250 / 5.5);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-118.f, 79.f, 8.f));
+	}
+
+	//right wall segment
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		//Sets up components
+		std::string fileName = "wallSegment.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 165 / 5.5, 250 / 5.5);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(118.f, 79.f, 8.f));
 	}
 
 	//cupboard
@@ -765,6 +795,21 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 	}
 
+	//Timer Sign
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		pointOnes = entity;
+		//set up components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "timer2.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 740 / 14, 160 / 14);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-43.f, -64.f, 40.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+	}
+
 	//Time's Up Sign
 	{
 		//Creates entity
@@ -790,7 +835,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit1.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-40.f, -65.f, 50.f));
 	}
 
 	//Colon
@@ -802,7 +847,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Colon.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 3, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(56.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-34.f, -65.f, 50.f));
 	}
 
 	//Seconds (10s)
@@ -815,7 +860,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit3.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(62.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-28.f, -65.f, 50.f));
 	}
 
 	//Seconds (1s)
@@ -828,7 +873,22 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(68.f, 40.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-22.f, -65.f, 50.f));
+	}
+
+	//Points Sign
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		pointOnes = entity;
+		//set up components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "points2.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 740 / 14, 160 / 14);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(50.f, -64.f, 40.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 	}
 
 	//Points(ten)
@@ -842,7 +902,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 		
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(90.f, 80.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(60.f, -64.f, 50.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		std::cout << fileName;
 	}
@@ -857,7 +917,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(98.f, 80.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(68.f, -64.f, 50.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 		std::cout << fileName;
 	}
@@ -870,7 +930,7 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 void Cafe::Update()
 {
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
-
+	auto& winCon = ECS::GetComponent<EndConditions>(MainEntities::MainPlayer());
 	
 	//Scene::AdjustScrollOffset();
 	player.Update();
@@ -888,6 +948,10 @@ void Cafe::Update()
 		tempDef.type = b2_staticBody;
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 		ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer()).SetBody(tempBody);//sets the player's body to a static body
+		if (ordersComplete >= 7)
+		{
+			SetFlag(true, 1);
+		}
 	}
 	if (start == true)
 	{
@@ -1236,6 +1300,7 @@ void Cafe::KeyboardDown()
 
 				ordersComplete += 1;//increases the number of orders the player has successfully completed by 1.
 				one += 1;
+
 				UpdatePoints();
 			}
 			else
@@ -1246,16 +1311,19 @@ void Cafe::KeyboardDown()
 	}
 	if (gameOver == true)//exit mini-game
 	{
-		if (Input::GetKeyDown(Key::Space))
+		if (Input::GetKeyDown(Key::Enter))
 		{
-			Scene::SetSceneChange(true, 5);
+			SDL_CloseAudioDevice(deviceID);
+			Scene::SetSceneChange(true, 6);
 		}
 	}
+
 	if (gameOver == true && repeat == true)
 	{
 		std::cout << "You have completed: " << ordersComplete << " orders!\n";
 		repeat = false;
 	}
+
 	if (Input::GetKeyDown(Key::Enter) && start == false)
 	{
 		start = true;

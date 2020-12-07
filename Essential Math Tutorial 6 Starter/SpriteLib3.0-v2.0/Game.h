@@ -3,6 +3,7 @@
 
 #include "BackEnd.h"
 
+
 //Our main class for running our game
 class Game
 {
@@ -48,6 +49,9 @@ public:
 
 	void NewScene();
 
+	void CheckWinConFlags();
+	void WinCon();
+
 	/*Input Functions*/
 	void AcceptInput();
 	void GamepadInput();
@@ -86,8 +90,22 @@ private:
 	bool m_click = false;
 	bool m_wheel = false;
 
+	bool kyra = true;
+	bool kainat = true;
+	bool stevie = true;
+	bool winston = false;
+	bool mithunan = true;
+	bool gameOver = false;
+
 	//Xbox Input
 	XInputManager input;
+
+	//audio vars
+	SDL_AudioSpec wavSpec;
+	Uint32 wavLength;
+	Uint8* wavBuffer;
+
+	SDL_AudioDeviceID deviceID;
 };
 
 

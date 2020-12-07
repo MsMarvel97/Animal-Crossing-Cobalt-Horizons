@@ -15,10 +15,10 @@ void PeachTrigger::OnEnter()
 
 		PhysicsBody::m_bodiesToDelete.push_back(m_targetEntities[i]);
 	
-		if (PhysicsBody::m_bodiesToDelete.size() > 0)
-		{
-			std::cout << "It works!";
-		}
+		//if (PhysicsBody::m_bodiesToDelete.size() > 0)
+		//{
+		//	std::cout << "It works!";
+		//}
 		m_targetEntities.clear();
 	}
 

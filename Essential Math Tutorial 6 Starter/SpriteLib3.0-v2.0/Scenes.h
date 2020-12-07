@@ -9,5 +9,8 @@
 #include "FruitGame.h"
 #include "AnimationDemo.h"
 #include "GameWorld.h"
+#include "StartMenu.h"
+#include "HelpMenu.h"
+#include "EndScreen.h"
 
 #endif // !__SCENES_H__

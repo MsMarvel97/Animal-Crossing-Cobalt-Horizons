@@ -134,3 +134,13 @@ bool DialogueClass::GetCafe()
 {
 	return m_cafe;
 }
+
+void DialogueClass::SetOrchard(bool check)
+{
+	m_orchard = check;
+}
+
+bool DialogueClass::GetOrchard()
+{
+	return m_orchard;
+}
