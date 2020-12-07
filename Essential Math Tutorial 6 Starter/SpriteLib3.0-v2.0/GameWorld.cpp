@@ -26,12 +26,17 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
 
+	//initializing audio
 	SDL_Init(SDL_INIT_AUDIO);
+	//loading wav file
 	SDL_LoadWAV("overworldBGM.wav", &wavSpec, &wavBuffer, &wavLength);
 
+	//setting output device
 	deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 
+	//checking if audio is loaded properly and returning true if it is
 	int success = SDL_QueueAudio(deviceID, wavBuffer, wavLength);
+	//starting audio
 	SDL_PauseAudioDevice(deviceID, 0);
 
 	//Sets up aspect ratio for the camera
@@ -419,7 +424,7 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 		//Sets up components
 		std::string fileName = "kainat.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 483 / 20, 679 / 20);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -50.f, 3.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -50.f, 101.f));
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
@@ -1620,6 +1625,8 @@ void GameWorld::KeyboardHold()
 		player.ScaleBody(-1.3 * Timer::deltaTime, 0);
 	}
 }
+
+//controls the overworld keyboard input
 void GameWorld::KeyboardDown()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
@@ -1637,45 +1644,44 @@ void GameWorld::KeyboardDown()
 	auto& sF = ECS::GetComponent<Sprite>(sEnd);
 
 
-
+	//draws physics bodies for debugging purposes
 	if (Input::GetKeyDown(Key::T))
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
 
+	//talking to Mithunan
 	if (Input::GetKeyDown(Key::E) && talk.GetMithunan() == true)
 	{
 		if (rollsFound == 3)
 		{
 			mS.SetTransparency(0.f);
 			mF.SetTransparency(1.f);
-			std::cout << "MOM GET THE CAMERA! Thanks for finding all my film rolls!\n";
 			SetFlag(true, 5);
 		}
 		else
 		{
 			mS.SetTransparency(1.f);
-			std::cout << "MOM GET THE CAMERA?! Can you find my three missing film rolls?\n";
 		}
 	}
 
+	//talking to Stevie
 	if (Input::GetKeyDown(Key::E) && talk.GetStevie() == true)
 	{
 		if (booksFound == 3)
 		{
 			sS.SetTransparency(0.f);
 			sF.SetTransparency(1.f);
-			std::cout << "Yay! Thanks for finding all my library books!\n";
 			SetFlag(true, 3);
 		}
 		else
 		{
 			sS.SetTransparency(1.f);
-			std::cout << "Can you find my three missing library books?.\n";
 		}
 		
 	}
 
+	//talking to Winston
 	if (Input::GetKeyDown(Key::E) && talk.GetWinston() == true)
 	{
 		if (instrumentsFound == 3)
@@ -1683,114 +1689,99 @@ void GameWorld::KeyboardDown()
 			wS.SetTransparency(0.f);
 			wF.SetTransparency(1.f);
 			SetFlag(true, 4);
-			std::cout << "Ohhh, you found my stuff! Here's some tickets to the next Coachella Concert where I'll be performing.\n";
 		}
 		else
 		{
 			wS.SetTransparency(1.f);
-			std::cout << "My brother Winston The Second lost my music stuff. Can you find them please?.\n";
 		}
 	}
 
+	//talking to Kainat
 	if (Input::GetKeyDown(Key::E) && talk.GetKainat() == true)
 	{
 		kaS.SetTransparency(1.f);
-		std::cout << "Can you catch 35 fruits in my Orchard?\n";
 	}
 
+	//talking to Kyra
 	if (Input::GetKeyDown(Key::E) && talk.GetKyra() == true)
 	{
 		kyS.SetTransparency(1.f);
-		std::cout << "Can you serve 7 orders in my cafe?\n";
 	}
 
+	//collecting quest items\\
+
 	if (Input::GetKeyDown(Key::E) && talk.GetBookOne() == true && bookOneTriggered == false)
-	{
-		std::cout << "Book collected.\n";
+	{;
 		booksFound += 1;
-		std::cout << "Books found: " << booksFound << ".\n";
 		ECS::GetComponent<Sprite>(bookOne).SetTransparency(0.f);
 		bookOneTriggered = true;
 	}
 	else if (Input::GetKeyDown(Key::E) && talk.GetBookTwo() == true && bookTwoTriggered == false)
 	{
-		std::cout << "Book collected.\n";
 		booksFound += 1;
-		std::cout << "Books found: " << booksFound << ".\n";
 		ECS::GetComponent<Sprite>(bookTwo).SetTransparency(0.f);
 		bookTwoTriggered = true;
 	}
 	else if (Input::GetKeyDown(Key::E) && talk.GetBookThree() == true && bookThreeTriggered == false)
 	{
-		std::cout << "Book collected.\n";
 		booksFound += 1;
-		std::cout << "Books found: " << booksFound << ".\n";
 		ECS::GetComponent<Sprite>(bookThree).SetTransparency(0.f);
 		bookThreeTriggered = true;
 	}
 
 	if (Input::GetKeyDown(Key::E) && talk.GetRollOne() == true && rollOneTriggered == false)
 	{
-		std::cout << "Roll collected.\n";
 		rollsFound += 1;
-		std::cout << "Rolls found: " << rollsFound << ".\n";
 		ECS::GetComponent<Sprite>(rollOne).SetTransparency(0.f);
 		rollOneTriggered = true;
 	}
 	else if (Input::GetKeyDown(Key::E) && talk.GetRollTwo() == true && rollTwoTriggered == false)
 	{
-		std::cout << "Roll collected.\n";
 		rollsFound += 1;
-		std::cout << "Rolls found: " << rollsFound << ".\n";
 		ECS::GetComponent<Sprite>(rollTwo).SetTransparency(0.f);
 		rollTwoTriggered = true;
 	}
 	else if (Input::GetKeyDown(Key::E) && talk.GetRollThree() == true && rollThreeTriggered == false)
 	{
-		std::cout << "Roll collected.\n";
 		rollsFound += 1;
-		std::cout << "Rolls found: " << rollsFound << ".\n";
 		ECS::GetComponent<Sprite>(rollThree).SetTransparency(0.f);
 		rollThreeTriggered = true;
 	}
 	
 	if (Input::GetKeyDown(Key::E) && talk.GetInstrumentOne() == true && instrumentOneTriggered == false)
 	{
-		std::cout << "Instrument collected.\n";
 		instrumentsFound += 1;
-		std::cout << "Instruments found: " << instrumentsFound << ".\n";
 		ECS::GetComponent<Sprite>(instrumentOne).SetTransparency(0.f);
 		instrumentOneTriggered = true;
 	}
 	else if (Input::GetKeyDown(Key::E) && talk.GetInstrumentTwo() == true && instrumentTwoTriggered == false)
 	{
-		std::cout << "Instrument collected.\n";
 		instrumentsFound += 1;
-		std::cout << "Instruments found: " << instrumentsFound << ".\n";
 		ECS::GetComponent<Sprite>(instrumentTwo).SetTransparency(0.f);
 		instrumentTwoTriggered = true;
 	}
 	else if (Input::GetKeyDown(Key::E) && talk.GetInstrumentThree() == true && instrumentThreeTriggered == false)
 	{
-		std::cout << "Instrument collected.\n";
 		instrumentsFound += 1;
-		std::cout << "Instruments found: " << instrumentsFound << ".\n";
 		ECS::GetComponent<Sprite>(instrumentThree).SetTransparency(0.f);
 		instrumentThreeTriggered = true;
 	}
 
+	//entering cafe chaos and closing audio
 	if (Input::GetKeyDown(Key::E) && talk.GetCafe() == true)
 	{
 		SDL_CloseAudioDevice(deviceID);
 		Scene::SetSceneChange(true, 3);		
 	}
 
+	//entering fruit shakedown and closing audio
 	if (Input::GetKeyDown(Key::E) && talk.GetOrchard() == true)
 	{
 		SDL_CloseAudioDevice(deviceID);
 		Scene::SetSceneChange(true, 4);
 	}
 	
+	//hiding dialogue bubbles
 	if (Input::GetKeyDown(Key::R))
 	{
 		mS.SetTransparency(0.f);

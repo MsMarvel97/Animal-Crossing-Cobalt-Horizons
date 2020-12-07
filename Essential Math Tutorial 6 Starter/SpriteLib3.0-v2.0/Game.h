@@ -90,11 +90,11 @@ private:
 	bool m_click = false;
 	bool m_wheel = false;
 
-	bool kyra = true;
-	bool kainat = true;
-	bool stevie = true;
+	bool kyra = false;
+	bool kainat = false;
+	bool stevie = false;
 	bool winston = false;
-	bool mithunan = true;
+	bool mithunan = false;
 	bool gameOver = false;
 
 	//Xbox Input

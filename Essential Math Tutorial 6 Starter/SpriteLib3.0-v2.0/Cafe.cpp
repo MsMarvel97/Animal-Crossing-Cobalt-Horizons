@@ -1023,11 +1023,6 @@ void Cafe::KeyboardDown()
 	std::string sugar3 = "twoSpoon.jpg";
 	std::string sugar4 = "threeSpoon.jpg";
 
-	if (Input::GetKeyDown(Key::X))
-	{
-		std::cout << Timer::StopWatch(timer) << "\n";
-	}
-
 	if (Input::GetKeyDown(Key::T))
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
@@ -1079,11 +1074,11 @@ void Cafe::KeyboardDown()
 					beverage[0] = 1;
 				}
 			}
-			for (int i = 0; i < 4; i++)
-			{
-				std::cout << beverage[i] << " ";
-			}
-			std::cout << "\n";
+			//for (int i = 0; i < 4; i++)
+			//{
+			//	std::cout << beverage[i] << " ";
+			//}
+			//std::cout << "\n";
 		}
 		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionMilk() == true)
 		{
@@ -1142,11 +1137,11 @@ void Cafe::KeyboardDown()
 				milk4 = false;
 				beverage[1] = 1;
 			}
-			for (int i = 0; i < 4; i++)
-			{
-				std::cout << beverage[i] << " ";
-			}
-			std::cout << "\n";
+			//for (int i = 0; i < 4; i++)
+			//{
+			//	std::cout << beverage[i] << " ";
+			//}
+			//std::cout << "\n";
 		}
 		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionSugar() == true)
 		{
@@ -1202,11 +1197,11 @@ void Cafe::KeyboardDown()
 				b_threeSpoon = false;
 				beverage[2] = 1;
 			}
-			for (int i = 0; i < 4; i++)
-			{
-				std::cout << beverage[i] << " ";
-			}
-			std::cout << "\n";
+			//for (int i = 0; i < 4; i++)
+			//{
+			//	std::cout << beverage[i] << " ";
+			//}
+			//std::cout << "\n";
 		}
 		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionCups() == true)
 		{
@@ -1240,11 +1235,11 @@ void Cafe::KeyboardDown()
 				lC = false;
 				beverage[3] = 1;
 			}
-			for (int i = 0; i < 4; i++)
-			{
-				std::cout << beverage[i] << " ";
-			}
-			std::cout << "\n";
+			//for (int i = 0; i < 4; i++)
+			//{
+			//	std::cout << beverage[i] << " ";
+			//}
+			//std::cout << "\n";
 		}
 		if (Input::GetKeyDown(Key::E) && stuff.GetCollisionRegister() == true)
 		{
@@ -1259,7 +1254,7 @@ void Cafe::KeyboardDown()
 			}
 			if (correctOrder == true)
 			{
-				std::cout << "The order is correct\n";
+				//std::cout << "The order is correct\n";
 
 				//creates new order
 				int orderIndex = 0;
@@ -1295,18 +1290,18 @@ void Cafe::KeyboardDown()
 				tempName = cupNames[custOrder[3] - 1];
 				ECS::GetComponent<Sprite>(cupOrder).LoadSprite(tempName, 30, 15);
 
-				std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
-				std::cout << "\n";
+				//std::cout << "New Order: " << custOrder[0] << custOrder[1] << custOrder[2] << custOrder[3];
+				//std::cout << "\n";
 
 				ordersComplete += 1;//increases the number of orders the player has successfully completed by 1.
 				one += 1;
 
 				UpdatePoints();
 			}
-			else
-			{
-				std::cout << "The order is wrong\n";
-			}
+			//else
+			//{
+			//	std::cout << "The order is wrong\n";
+			//}
 		}
 	}
 	if (gameOver == true)//exit mini-game
@@ -1320,7 +1315,7 @@ void Cafe::KeyboardDown()
 
 	if (gameOver == true && repeat == true)
 	{
-		std::cout << "You have completed: " << ordersComplete << " orders!\n";
+		//std::cout << "You have completed: " << ordersComplete << " orders!\n";
 		repeat = false;
 	}
 

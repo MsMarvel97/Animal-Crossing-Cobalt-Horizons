@@ -25,8 +25,11 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
 
+	//resetting global vars so game can be played again
 	timer = 0;
+	start = false;
 
+	//initializing audio
 	SDL_Init(SDL_INIT_AUDIO);
 
 
@@ -406,31 +409,47 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 }
 
+//fruit game update loop
 void FruitGame::Update()
 {
+	//getting PlayerPoints component to check player point count
 	auto& stun = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
+	//getting Kinematics component of stunIcon to update its position in relation to the player
 	auto& stunKin = ECS::GetComponent<Kinematics>(stunIcon);
+	//getting Player component to update player
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
 
+	//adjusting camera offset
 	Scene::AdjustScrollOffset();
 
+	//creating new fruit entities and checking if game is over
 	NewFruits();
+	//updating timer sprites
 	UpdateSprites();
+	//updating points sprites
 	UpdatePoints();
+	//reattaching camera to main player after new entities are created
 	UpdateCamera();
 
+	//checking if player is stunned and updating the player if they are not stunned
 	if (stun.GetStun() == false)
 	{
 		player.Update();
 	}
 
+	//updating the position of the stun symbol to follow the player
 	stunKin.SetPosition();
 }
 
+//keyboard input commands
 void FruitGame::KeyboardHold()
 {
+	//getting PhysicsBody and PlayerPoints components
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 	auto& points = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
+
+	//Speed code\\
+
 	float speed = 1.f;
 	b2Vec2 vel = b2Vec2(0.f, 0.f);
 
@@ -457,21 +476,27 @@ void FruitGame::KeyboardHold()
 	}
 }
 
+//keydown functions
 void FruitGame::KeyboardDown()
 {
+	//getting PhysicsBody
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
 
+	//drawing physics bodies for debugging
 	if (Input::GetKeyDown(Key::T))
 	{
 		PhysicsBody::SetDraw(!PhysicsBody::GetDraw());
 	}
+	//starting game if it hasn't been started yet
 	if (Input::GetKeyDown(Key::Enter) && start == false) {
 		start = true;
 		if (timer == 0)
 		{
+			//getting seed for stopwatch
 			timer = Timer::time;
 
+			//loading audio
 			SDL_LoadWAV("fruitgameBGM.wav", &wavSpec, &wavBuffer, &wavLength);
 
 			deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
@@ -480,6 +505,7 @@ void FruitGame::KeyboardDown()
 			SDL_PauseAudioDevice(deviceID, 0);
 		}
 	}
+	//checking if game is over, and if it is initializing end sequence
 	if (Input::GetKeyDown(Key::Enter) && gameOver == true)
 	{
 		gameOver = false;
@@ -494,15 +520,19 @@ void FruitGame::KeyboardUp()
 
 }
 
+//spawning new fruits
 void FruitGame::NewFruits()
 {
+	//updating stopwatch
 	float currentTime = Timer::StopWatch(timer);
+	//getting player and sprite components
 	auto& points = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
 	auto& winCon = ECS::GetComponent<EndConditions>(MainEntities::MainPlayer());
 	auto& stun = ECS::GetComponent<Sprite>(stunIcon);
 	auto& sign = ECS::GetComponent<Sprite>(bonk);
 	auto& endGame = ECS::GetComponent<Sprite>(timesUp);
 
+	//checking if stun is true and if it is incrementing it towards ending condition. Also sets stun sprites to visible.
 	if (points.GetStun() == true)
 	{
 		stunTracker++;
@@ -510,6 +540,7 @@ void FruitGame::NewFruits()
 		sign.SetTransparency(1.f);
 	}
 
+	//ending stun condition after 180 frames and hiding stun sprites
 	if (stunTracker == 180)
 	{
 		points.SetStun(false);
@@ -518,18 +549,20 @@ void FruitGame::NewFruits()
 		stunTracker = 0;
 	}
 
+	//spawning new fruits if game has been started and isn't over
 	if (timer != 0 && currentTime < 90.f)
 	{
 		if (frames == 0)
 		{
+			//spawning a coconut every 3 fruits. Coconuts are triggers that stun player.
 			if (fruitCounter == 3)
 			{
-				auto entity = ECS::CreateEntity();
-				//float randomXVal = ((float)rand()) / ((float)RAND_MAX / (150.f - 20.f));
 
+				auto entity = ECS::CreateEntity();
+				
+				//spawning in random x position 
 				auto randomSeed = std::default_random_engine(std::random_device{}());
 				std::uniform_real_distribution range{ -115.f, 115.f };
-				//float randomXVal = rand() % 220 - 115;
 				float randomXVal = range(randomSeed);
 
 				//Add components
@@ -565,6 +598,7 @@ void FruitGame::NewFruits()
 				fruitCounter = 0;
 			}
 
+			//when not spawning a coconut, spawning a peach. Peaches are triggers that increase player points.
 			else
 			{
 				auto entity = ECS::CreateEntity();
@@ -609,6 +643,7 @@ void FruitGame::NewFruits()
 			frames++;
 		}
 
+		//only spawning every 50 frames
 		else if (frames >= 1 && frames < 50)
 		{
 			frames++;
@@ -619,6 +654,7 @@ void FruitGame::NewFruits()
 			frames = 0;
 		}
 	}
+	//ending game and checking if player completed their quest. Flagging the quest complete var if they have.
 	if (timer != 0 && currentTime > 91.f)
 	{
 		if (points.GetPeachPoints() >= 35)
@@ -631,6 +667,7 @@ void FruitGame::NewFruits()
 
 }
 
+//updating timer sprites
 void FruitGame::UpdateSprites()
 {
 	float currentTime = Timer::StopWatch(timer);
@@ -657,11 +694,12 @@ void FruitGame::UpdateSprites()
 		//increasing frame count by one
 		counter++;
 	}
-
+	//updating timer sprites
 	if (counter >= 60)
 	{
 		std::string time = "";
 
+		//cycling through ones digits
 		switch (onesCount)
 		{
 		case 0:
@@ -726,6 +764,7 @@ void FruitGame::UpdateSprites()
 			break;
 		}
 
+		//increment tens column by one if ones is switching from 0 to 9 on that frame
 		if (tens == true)
 		{
 			switch (tensCount)
@@ -769,6 +808,7 @@ void FruitGame::UpdateSprites()
 			}
 		}
 
+		//increment minutes column by one if seconds (tens column) is changing from 0 to 5 on that frame
 		if (minutes == true)
 		{
 			switch (minutesCount)
@@ -816,22 +856,27 @@ void FruitGame::UpdateSprites()
 				break;
 			}
 		}
+		//reducing counter by a frame
 		counter -= 60;
+		//resetting timer sprite vars
 		minutes = false;
 		tens = false;
 	}
 }
 
-
+//updating player points sprites
 void FruitGame::UpdatePoints()
 {
+	//getting playerpoints and sprites
 	auto& playerPoints = ECS::GetComponent<PlayerPoints>(MainEntities::MainPlayer());
 	auto& pTens = ECS::GetComponent<Sprite>(pointsTens);
 	auto& pOnes = ECS::GetComponent<Sprite>(pointsOnes);
 
+	//if player gains a point, increase counter
 	if (playerPoints.GetPointGain() == true)
 	{
 		std::string points = "";
+		//incrementing counter up by one
 		switch (pointsOnesCount)
 		{
 		case 0:
@@ -896,6 +941,7 @@ void FruitGame::UpdatePoints()
 			break;
 		}
 
+		//incrementing counter (tens column) up by one if the ones column is moving from 9 to 0 on this frame.
 		if (pointsTensFlag == true)
 		{
 			switch (pointsTensCount)
@@ -961,17 +1007,20 @@ void FruitGame::UpdatePoints()
 				break;
 			}
 		}
+		//resetting point gain and sprite increment control vars to false
 		playerPoints.SetPointGain(false);
 		pointsTensFlag = false;
 	}
 }
 
+//reattaching camera
 void FruitGame::UpdateCamera()
 {
 	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 	ECS::GetComponent<VerticalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
 }
 
+//concatenating string based on what is passed so the correct sprite can be loaded
 std::string FruitGame::TimerStrings(std::string digit)
 {
 	std::string base = "Digit";
