@@ -118,4 +118,10 @@ protected:
 	int pointOnes;//sprite
 	int ten = 0;
 	int one = 0;
+
+	SDL_AudioSpec wavSpec;
+	Uint32 wavLength;
+	Uint8* wavBuffer;
+
+	SDL_AudioDeviceID deviceID;  
 };

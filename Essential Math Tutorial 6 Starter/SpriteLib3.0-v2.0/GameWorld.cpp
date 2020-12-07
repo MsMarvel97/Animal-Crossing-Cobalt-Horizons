@@ -10,8 +10,6 @@ GameWorld::GameWorld(std::string name)
 	//No gravity this is a top down scene
 	m_gravity = b2Vec2(0.f, 0.f);
 	m_physicsWorld->SetGravity(m_gravity);
-
-	
 }
 
 
@@ -24,6 +22,14 @@ void GameWorld::InitScene(float windowWidth, float windowHeight)
 	SetSceneChange(false, -1);
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
+
+	SDL_Init(SDL_INIT_AUDIO);
+	SDL_LoadWAV("fruitGame.wav", &wavSpec, &wavBuffer, &wavLength);
+
+	deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+
+	int success = SDL_QueueAudio(deviceID, wavBuffer, wavLength);
+	SDL_PauseAudioDevice(deviceID, 0);
 
 	//Sets up aspect ratio for the camera
 	float aspectRatio = windowWidth / windowHeight;

@@ -23,6 +23,9 @@ void Cafe::InitScene(float windowWidth, float windowHeight)
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
 
+	timer = 0;
+	SDL_Init(SDL_INIT_AUDIO);
+
 	//Sets up aspect ratio for the camera
 	float aspectRatio = windowWidth / windowHeight;
 	//std::cout << "Hello \n";
@@ -1259,6 +1262,12 @@ void Cafe::KeyboardDown()
 		if (timer == 0)
 		{
 			timer = Timer::time;
+
+
+			SDL_LoadWAV("CafeBGM.wav", &wavSpec, &wavBuffer, &wavLength);
+			deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+			int success = SDL_QueueAudio(deviceID, wavBuffer, wavLength);
+			SDL_PauseAudioDevice(deviceID, 0);
 		}
 	}
 	//manual point increase
@@ -1271,7 +1280,8 @@ void Cafe::KeyboardDown()
 	//manual scene swicth
 	if (Input::GetKeyDown(Key::Y))
 	{
-		Scene::SetSceneChange(true, 5);
+		SDL_CloseAudioDevice(deviceID);
+		Scene::SetSceneChange(true, 4);
 	}
 }
 
@@ -1291,10 +1301,8 @@ void Cafe::UpdateSprites()
 	static float remainder = 0.f;
 	static int counter = 0;
 
-	if (timer == 0 || currentTime >= 90)
-	{
-		return;
-	}
+	if (timer == 0 || currentTime > 91){return;}
+
 		remainder += Timer::deltaTime;
 		while (remainder >= timing)
 		{
@@ -1306,7 +1314,8 @@ void Cafe::UpdateSprites()
 		{
 			std::string time = "";
 
-			switch (onesCount) {
+			switch (onesCount) 
+			{
 			case 0:
 				time = TimerStrings("9");
 				secondsOnes.LoadSprite(time, 5, 8);

@@ -21,6 +21,11 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 	m_sceneReg = new entt::registry;
 	m_physicsWorld = new b2World(m_gravity);
 	m_physicsWorld->SetContactListener(&listener);
+	timer = 0;
+	
+	SDL_Init(SDL_INIT_AUDIO);
+	
+
 
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
@@ -244,7 +249,6 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		ECS::AttachComponent<Sprite>(entity);
 		ECS::AttachComponent<Transform>(entity);
-		ECS::AttachComponent<Kinematics>(entity);
 
 		std::string fileName = "bonk.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 50, 50);
@@ -253,6 +257,29 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 	}
 
+	//Timer Nameplate
+	{
+		auto entity = ECS::CreateEntity();
+		
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		
+		std::string fileName = "timer.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 70, 20);
+		ECS::GetComponent<Transform>(entity).SetPosition(-87.f, 65.f, 1.f);
+	}
+
+	//Points Nameplate
+	{
+		auto entity = ECS::CreateEntity();
+
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+
+		std::string fileName = "points.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 70, 20);
+		ECS::GetComponent<Transform>(entity).SetPosition(83.f, 65.f, 1.f);
+	}
 
 	//Minutes
 	{
@@ -264,7 +291,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit1.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(91.f, 50.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-83.f, 65.f, 50.f));
 	}
 
 	//Colon
@@ -276,7 +303,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Colon.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 3, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(99.f, 50.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-75.f, 65.f, 50.f));
 	}
 
 	//Seconds (10s)
@@ -289,7 +316,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit3.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(107.f, 50.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-67.f, 65.f, 50.f));
 	}
 
 	//Seconds (1s)
@@ -302,7 +329,7 @@ void FruitGame::InitScene(float windowWidth, float windowHeight)
 
 		std::string fileName = "Digit0.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 5, 8);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(115.f, 50.f, 50.f));
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(-59.f, 65.f, 50.f));
 	}
 
 	////Points (10s)
@@ -426,7 +453,6 @@ void FruitGame::KeyboardDown()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
 	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
-	auto* scene = new Game * ();
 
 	if (Input::GetKeyDown(Key::T))
 	{
@@ -437,10 +463,19 @@ void FruitGame::KeyboardDown()
 		if (timer == 0)
 		{
 			timer = Timer::time;
+		
+
+			SDL_LoadWAV("fruitGame.wav", &wavSpec, &wavBuffer, &wavLength);
+
+			deviceID = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+
+			int success = SDL_QueueAudio(deviceID, wavBuffer, wavLength);
+			SDL_PauseAudioDevice(deviceID, 0);
 		}
 	}
 	if (Input::GetKeyDown(Key::R))
 	{
+
 		Scene::SetSceneChange(true, 3);
 	}
 
@@ -590,10 +625,9 @@ void FruitGame::UpdateSprites()
 	const float timing = 1 / 60.f;
 	static float remainder = 0.f;
 	static int counter = 0;
-	static bool nextStep = false;
 
-	//checks if timer has started and if it hasn't, returns the function without doing anything
-	if (timer == 0 || currentTime >= 90){return;}
+	//checks if timer has started and if it hasn't or if game is over, returns the function without doing anything
+	if (timer == 0 || currentTime > 90){return;}
 
 	//increasing remainder by delta time
 	remainder += Timer::deltaTime;

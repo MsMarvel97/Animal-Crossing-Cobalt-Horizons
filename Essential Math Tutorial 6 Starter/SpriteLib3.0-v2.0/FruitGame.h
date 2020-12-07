@@ -58,4 +58,11 @@ protected:
 	bool minutes = false;
 	
 	bool pointsTensFlag = false;
+
+
+	SDL_AudioSpec wavSpec;
+	Uint32 wavLength;
+	Uint8* wavBuffer;
+
+	SDL_AudioDeviceID deviceID;
 };
